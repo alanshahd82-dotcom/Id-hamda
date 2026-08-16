@@ -25,6 +25,10 @@ const toastRegion = document.querySelector("#toast-region");
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
 const money = (value) => `${Number(value || 0).toLocaleString("ar-MA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} DH`;
 const date = (value) => value ? new Date(value).toLocaleDateString("ar-MA") : "—";
+const monthLabel = (period) => {
+  const [year, month] = String(period || "").split("-");
+  return year && month ? `${month}/${year}` : "—";
+};
 const api = async (url, options = {}) => {
   const response = await fetch(url, { headers: { "Content-Type": "application/json", ...(options.headers || {}) }, ...options });
   const body = await response.json().catch(() => ({}));
