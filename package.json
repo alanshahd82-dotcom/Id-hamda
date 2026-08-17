@@ -1,8 +1,8 @@
 {
-  "name": "id-hamda-water-management",
+  "name": "my-sindbad-pwa",
   "version": "1.0.0",
   "private": true,
-  "description": "نظام تسيير الماء الصالح للشرب لجمعية إحمدا",
+  "description": "My Sindbad — مساعدك الذكي للسفر",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

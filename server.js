@@ -9,6 +9,7 @@ const types = {
   '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
@@ -17,7 +18,15 @@ const types = {
 };
 
 const server = http.createServer((request, response) => {
-  const requested = decodeURIComponent((request.url || '/').split('?')[0]);
+  let requested;
+  try {
+    requested = decodeURIComponent((request.url || '/').split('?')[0]);
+  } catch {
+    response.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+    response.end('Bad request');
+    return;
+  }
+
   const relative = requested === '/' ? 'index.html' : requested.replace(/^\/+/, '');
   const file = path.resolve(root, relative);
   if (file !== root && !file.startsWith(`${root}${path.sep}`)) {
@@ -44,5 +53,5 @@ const server = http.createServer((request, response) => {
 });
 
 server.listen(port, '0.0.0.0', () => {
-  console.log(`Id Hamda is running on port ${port}`);
+  console.log(`My Sindbad is running on port ${port}`);
 });
