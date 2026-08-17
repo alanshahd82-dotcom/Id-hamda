@@ -2,7 +2,7 @@
   "name": "id-hamda-water-management",
   "version": "1.0.0",
   "private": true,
-  "description": "نظام تسيير الماء الصالح للشرب لجمعية إدحمدا",
+  "description": "نظام تسيير الماء الصالح للشرب لجمعية إحمدا",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -10,9 +10,5 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "dependencies": {
-    "express": "^5.1.0",
-    "express-session": "^1.18.2"
   }
 }
