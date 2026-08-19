@@ -10,7 +10,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="My Sindbad">
 <link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
+<link rel="apple-touch-icon" href="./icons/brand-logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
@@ -197,6 +198,7 @@ label .inp { margin-top: 0.35rem; }
   text-align: center;
 }
 .auth .logo { width: 76px; height: 76px; margin-bottom: 0.8rem; }
+.auth .logo img { width: 100%; height: 100%; display: block; object-fit: cover; border-radius: 22%; }
 .auth h1 { font-size: 1.85rem; color: #ffffff; letter-spacing: 0.5px; margin-bottom: 0.15rem; }
 .auth .tag { color: var(--gold); font-size: 0.72rem; letter-spacing: 2px; font-weight: 600; margin-bottom: 1.6rem; }
 .auth-card {
@@ -270,7 +272,7 @@ label .inp { margin-top: 0.35rem; }
   z-index: 30;
 }
 .hdr .brand { display: flex; align-items: center; gap: 0.65rem; }
-.hdr .brand svg { width: 30px; height: 30px; }
+.hdr .brand-logo { width: 34px; height: 34px; display: block; object-fit: cover; border-radius: 22%; flex-shrink: 0; }
 .hdr .brand b { font-size: 1.02rem; color: var(--navy-900); display: block; line-height: 1.1; font-weight: 700; }
 .hdr .brand small { color: var(--text-muted); font-size: 0.64rem; letter-spacing: 0.5px; }
 .hdr .u { display: flex; align-items: center; gap: 0.6rem; }
@@ -520,6 +522,7 @@ iframe.map { width: 100%; height: 240px; border: 1px solid var(--border); border
   border-radius: 50%;
   background: var(--gold);
 }
+.brand-logo { box-shadow: 0 2px 8px rgba(11, 27, 51, 0.14); }
 .foot { text-align: center; color: var(--text-light); font-size: 0.68rem; padding: 1.2rem 0 0.5rem; }
 </style>
 </head>
@@ -551,7 +554,7 @@ out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 
 nav:'<polygon points="3 11 22 2 13 21 11 13 3 11"/>'
 };
 const ic=(n,s=18)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
-const LOGO=`<svg viewBox="0 0 64 64" fill="none"><path d="M46 6a27 27 0 1 0 0 52A31 31 0 0 1 46 6z" fill="#D4AF37"/><path d="M20 40h26l-5 9H25z" fill="#0E3A6D" stroke="#D4AF37" stroke-width="1.5"/><path d="M32 14v26" stroke="#D4AF37" stroke-width="2"/><path d="M32 16c9 5 11 14 11 24H32z" fill="#F8F4EC"/><path d="M32 20c-6 4-8 12-8 20h8z" fill="#e2d7bd"/><path d="M14 52c4 3 8 3 12 0s8-3 12 0 8 3 12 0" stroke="#F8F4EC" stroke-width="2.5" stroke-linecap="round"/><circle cx="50" cy="14" r="1.6" fill="#D4AF37"/><circle cx="55" cy="22" r="1.2" fill="#D4AF37"/></svg>`;
+const LOGO=`<img src="./icons/brand-logo.jpg" alt="شعار My Sindbad" class="brand-logo">`;
 
 /* ===== البيانات ===== */
 const CITIES={
@@ -566,6 +569,7 @@ const NAVB=[{id:'home',t:'الرئيسية',i:'home'},{id:'trip',t:'رحلتي',
 const $=id=>document.getElementById(id);
 const ls=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 const lg=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d;}catch(e){return d;}};
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let session=lg('sb_session',null), city='istanbul', page='home', tab='hotels', authTab='login', chat=[];
 
 /* ===== الدخول ===== */
@@ -615,7 +619,7 @@ const cityChips=()=>`<div class="row" style="margin-bottom:.85rem">${Object.keys
 function pgHome(P){const t=lg('sb_trip',null);
  P.innerHTML=`
   <div class="home-hero">
-   <span class="greeting">مرحباً ${session.name} 👋</span>
+   <span class="greeting">مرحباً ${esc(session.name)} 👋</span>
    <h2>إلى أين وجهتك القادمة؟</h2>
    <div class="home-search">
     <input class="inp" id="q" placeholder="ابحث عن مدينة أو وجهة..." onkeydown="if(event.key==='Enter')doSearch()">
@@ -631,7 +635,7 @@ function pgHome(P){const t=lg('sb_trip',null);
   <div class="sec">رحلتي القادمة</div>
   ${t?`
   <div class="trip-summary">
-   <div><h2>رحلتك إلى ${CITIES[t.city]?CITIES[t.city].n:t.city}</h2><p>${t.from} ← ${t.to}</p></div>
+   <div><h2>رحلتك إلى ${CITIES[t.city]?CITIES[t.city].n:esc(t.city)}</h2><p>${esc(t.from)} ← ${esc(t.to)}</p></div>
    <button class="btn sm ghost" onclick="go('trip')">عرض الخطة</button>
   </div>`:`
   <div class="empty-state">
@@ -661,16 +665,17 @@ function pgTrip(P){let t=lg('sb_trip',null);
    <label>تاريخ العودة<input class="inp" type="date" id="tTo" value="2026-09-03"></label>
   </div>
   <button class="btn navy w" style="margin-top:.4rem" onclick="mkTrip()">${ic('plane',16)} إنشاء خطة الرحلة</button></div>`;return;}
- const days=Math.min(7,Math.max(1,Math.round((new Date(t.to)-new Date(t.from))/864e5)+1));
+  t.days=Array.isArray(t.days)?t.days:[];t.check=Array.isArray(t.check)?t.check:[];
+  const days=Math.min(7,Math.max(1,Math.round((new Date(t.to)-new Date(t.from))/864e5)+1));
  while(t.days.length<days)t.days.push([]);
  P.innerHTML=`
   <div class="trip-summary">
-   <div><h2>رحلتك إلى ${CITIES[t.city]?CITIES[t.city].n:t.city}</h2><p>${t.from} ← ${t.to} • ${days} أيام</p></div>
+   <div><h2>رحلتك إلى ${CITIES[t.city]?CITIES[t.city].n:esc(t.city)}</h2><p>${esc(t.from)} ← ${esc(t.to)} • ${days} أيام</p></div>
    <button class="btn sm ghost" onclick="if(confirm('حذف الرحلة؟')){ls('sb_trip',null);render()}" title="حذف الرحلة">${ic('trash',14)}</button>
   </div>
   <div class="sec">خطة الأيام</div>
   ${Array.from({length:days},(_,d)=>`<div class="day-h">اليوم ${d+1}</div><div class="timeline">
-   ${t.days[d].map((it,ix)=>`<div class="tl"><button class="del" onclick="delItem(${d},${ix})">${ic('trash',13)}</button><b>${it.title}</b><small>${it.time} • ${it.type}</small></div>`).join('')||'<small style="color:var(--text-muted);display:block;padding:.4rem 0">لا توجد أنشطة بعد</small>'}
+    ${t.days[d].map((it,ix)=>`<div class="tl"><button class="del" onclick="delItem(${d},${ix})">${ic('trash',13)}</button><b>${esc(it.title)}</b><small>${esc(it.time)} • ${esc(it.type)}</small></div>`).join('')||'<small style="color:var(--text-muted);display:block;padding:.4rem 0">لا توجد أنشطة بعد</small>'}
   </div>`).join('')}
   <div class="card"><div class="sec" style="margin-top:0">إضافة نشاط</div>
    <div class="grid2"><label>اليوم<select class="inp" id="iDay">${Array.from({length:days},(_,d)=>`<option value="${d}">اليوم ${d+1}</option>`).join('')}</select></label>
@@ -680,8 +685,8 @@ function pgTrip(P){let t=lg('sb_trip',null);
    <button class="btn navy w" onclick="addItem()">${ic('plus',16)} إضافة النشاط</button></div>
   <div class="sec">قائمة الحاجيات والتجهيزات</div>
   <div class="card">
-   <div style="display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--text-muted)"><span>نسبة الجاهزية</span><b>${Math.round(t.check.filter(c=>c.done).length/t.check.length*100)}%</b></div>
-   <div class="prog"><i style="width:${Math.round(t.check.filter(c=>c.done).length/t.check.length*100)}%"></i></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--text-muted)"><span>نسبة الجاهزية</span><b>${t.check.length?Math.round(t.check.filter(c=>c.done).length/t.check.length*100):0}%</b></div>
+    <div class="prog"><i style="width:${t.check.length?Math.round(t.check.filter(c=>c.done).length/t.check.length*100):0}%"></i></div>
    ${t.check.map((c,ix)=>`<div class="check"><input type="checkbox" ${c.done?'checked':''} onchange="togCheck(${ix})"><span class="${c.done?'done':''}">${c.t}</span></div>`).join('')}
    <div style="display:flex;gap:.45rem;margin-top:.85rem"><input class="inp" id="newCh" placeholder="إضافة حاجة جديدة..."><button class="btn sm navy" onclick="addCheck()">${ic('plus',14)} إضافة</button></div>
   </div>`;}
@@ -729,9 +734,10 @@ function pgMap(P){const C=CITIES[city]||CITIES.istanbul;
     <small style="color:var(--text-light);font-size:.64rem">أسعار تقريبية</small></div>
   </div>`;
  doCv();
- fetch(`https://api.open-meteo.com/v1/forecast?latitude=${C.lat}&longitude=${C.lon}&current=temperature_2m,weather_code,wind_speed_10m`)
-  .then(r=>r.json()).then(j=>{const w=j.current;$('wBox').innerHTML=`<b>${Math.round(w.temperature_2m)}°</b> ${wtxt(w.weather_code)}<br><span style="font-size:.7rem">الرياح: ${Math.round(w.wind_speed_10m)} كم/س</span>`;})
-  .catch(()=>{$('wBox').textContent='تعذر الاتصال بخدمة الطقس';});}
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${C.lat}&longitude=${C.lon}&current=temperature_2m,weather_code,wind_speed_10m`)
+   .then(r=>{if(!r.ok)throw new Error('weather');return r.json();})
+   .then(j=>{const box=$('wBox');if(!box||!j.current)return;const w=j.current;box.innerHTML=`<b>${Math.round(w.temperature_2m)}°</b> ${wtxt(w.weather_code)}<br><span style="font-size:.7rem">الرياح: ${Math.round(w.wind_speed_10m)} كم/س</span>`;})
+   .catch(()=>{const box=$('wBox');if(box)box.textContent='تعذر الاتصال بخدمة الطقس';});}
 function wtxt(c){return c===0?'صحو':c<3?'غائم جزئياً':c<45?'غائم':c<50?'ضباب':c<70?'أمطار':c<85?'ثلوج':'عاصفة';}
 function doCv(){const a=+$('cvA').value||0,f=$('cvF').value,t=$('cvT').value;
  $('cvR').textContent=(a/RATES[f]*RATES[t]).toFixed(2)+' '+t;}
@@ -746,7 +752,7 @@ function pgCommunity(P){const posts=lg('sb_posts',[]);
    <button class="btn navy w" onclick="addPost()">${ic('cam',16)} نشر المشاركة</button>
   </div>
   ${posts.length?[...posts].reverse().map((p,ri)=>{const ix=posts.length-1-ri;return `<div class="post">${p.img?`<img src="${p.img}">`:`<div class="noimg">${ic('cam',26)}</div>`}
-   <div class="pb"><p>${p.cap||''}</p><div class="pm"><span>${ic('user',12)} ${p.by}</span>
+    <div class="pb"><p>${esc(p.cap)}</p><div class="pm"><span>${ic('user',12)} ${esc(p.by)}</span>
    <button class="like" onclick="likePost(${ix})">${ic('heart',14)} ${p.likes||0}</button></div></div></div>`;}).join(''):`
   <div class="empty-state">
    <div class="es-icon">${ic('cam',22)}</div>
@@ -764,7 +770,7 @@ function likePost(ix){const p=lg('sb_posts',[]);p[ix].likes=(p[ix].likes||0)+1;l
 
 function pgBot(P){P.innerHTML=`
   <div class="sec">مساعد السفر</div>
-  <div class="chat" id="chatBox">${chat.map(m=>`<div class="msg ${m.who}">${m.txt}</div>`).join('')||`<div class="msg bot">مرحباً ${session.name}! أنا مساعد السفر الخاص بك في My Sindbad. كيف يمكنني مساعدتك في تخطيط رحلتك اليوم؟</div>`}</div>
+   <div class="chat" id="chatBox">${chat.map(m=>`<div class="msg ${m.who}">${esc(m.txt).replace(/\n/g,'<br>')}</div>`).join('')||`<div class="msg bot">مرحباً ${esc(session.name)}! أنا مساعد السفر الخاص بك في My Sindbad. كيف يمكنني مساعدتك في تخطيط رحلتك اليوم؟</div>`}</div>
   <div class="sugs">${['نصائح تجهيز حقيبة السفر','كيف أحول العملات؟','أهم نصائح السفر الدولي','كيف أنظم خطة رحلتي؟'].map(s=>`<button class="chip" onclick="ask('${s}')">${s}</button>`).join('')}</div>
   <div style="display:flex;gap:.45rem"><input class="inp" id="bIn" placeholder="اكتب استفسارك هنا..." onkeydown="if(event.key==='Enter')ask()"><button class="btn navy" onclick="ask()">${ic('send',15)}</button></div>`;
  const cb=$('chatBox');cb.scrollTop=cb.scrollHeight;}
