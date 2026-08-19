@@ -717,7 +717,6 @@ function authHTML(){return `
    <div class="err" id="aErr"></div>
    <button class="btn navy w" onclick="${authTab==='reg'?'doReg()':'doLogin()'}">${authTab==='reg'?'إنشاء حساب':'تسجيل الدخول'}</button>
    <button class="btn ghost w" style="margin-top:.6rem" onclick="session={name:'زائر',guest:1};ls('sb_session',session);render()">المتابعة كزائر</button>
-   <div class="free">تسجيل فوري بدون أي رسوم</div>
   </div>
   <div class="feat"><span>تخطيط رحلات متكامل</span><span>خرائط وإرشادات</span><span>تجارب المسافرين</span></div>
  </div>`;}
@@ -786,7 +785,6 @@ function pgTrip(P){let t=lg('sb_trip',null);
   <div class="empty-state" style="margin-bottom:1rem">
    <div class="es-icon">${ic('plane',22)}</div>
    <h3>ابدأ رحلتك الأولى</h3>
-   <p>حدد وجهتك وتواريخ السفر لإنشاء جدول يومي تفاعلي وقائمة تجهيزات مخصصة.</p>
   </div>
   <div class="card"><label>الوجهة<select class="inp" id="tCity">${Object.keys(CITIES).map(c=>`<option value="${c}">${CITIES[c].n} — ${CITIES[c].c}</option>`).join('')}</select></label>
   <div class="grid2">
@@ -840,7 +838,6 @@ function pgExplore(P){const C=CITIES[city];
   <div class="empty-state">
    <div class="es-icon">${ic(tab==='hotels'?'hotel':tab==='rest'?'food':'pin',24)}</div>
    <h3>اكتشف وجهتك القادمة</h3>
-   <p>حدد المدينة أو ابحث عن الأماكن والخدمات المتوفرة في وجهتك للاطلاع على التفاصيل.</p>
    <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
     <button class="btn navy sm" onclick="go('map')">عرض على الخريطة</button>
     <button class="btn ghost sm" onclick="go('trip')">إضافة إلى خطة رحلتي</button>
@@ -886,7 +883,6 @@ function pgCommunity(P){const posts=lg('sb_posts',[]);
   <div class="empty-state">
    <div class="es-icon">${ic('cam',22)}</div>
    <h3>كن أول من يشارك تجربته</h3>
-   <p>شارك صورك ولحظاتك المميزة من رحلاتك واحتفظ بذكرياتك في مكان واحد.</p>
    <button class="btn navy sm" onclick="$('pCap').focus()">مشاركة تجربة</button>
   </div>`}`;}
 function addPost(){const f=$('pFile').files[0],cap=$('pCap').value.trim();
@@ -899,7 +895,7 @@ function likePost(ix){const p=lg('sb_posts',[]);p[ix].likes=(p[ix].likes||0)+1;l
 
 function pgBot(P){P.innerHTML=`
   <div class="sec">Sindbad Concierge</div>
-   <div class="chat" id="chatBox">${chat.map(m=>`<div class="msg ${m.who}">${esc(m.txt).replace(/\n/g,'<br>')}</div>`).join('')||`<div class="msg bot">مرحبًا ${esc(session.name)}. أنا سندباد، وسأساعدك في تفاصيل رحلتك.</div>`}</div>
+   <div class="chat" id="chatBox">${chat.map(m=>`<div class="msg ${m.who}">${esc(m.txt).replace(/\n/g,'<br>')}</div>`).join('')}</div>
   <div class="sugs">${['جهز حقيبتي','اكتشف وجهة','ساعدني أثناء السفر','خطط رحلتي'].map(s=>`<button class="chip" onclick="ask('${s}')">${s}</button>`).join('')}</div>
   <div style="display:flex;gap:.45rem"><input class="inp" id="bIn" placeholder="اكتب استفسارك هنا..." onkeydown="if(event.key==='Enter')ask()"><button class="btn navy" onclick="ask()">${ic('send',15)}</button></div>`;
  const cb=$('chatBox');cb.scrollTop=cb.scrollHeight;}
@@ -943,7 +939,7 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
  const destinationLabel = () => destination ? `${esc(destination.name)}${destination.country ? ` — ${esc(destination.country)}` : ''}` : 'اختر وجهتك من البحث';
  const requireDestination = (P) => {
    if (destination) return true;
-   P.innerHTML = `<div class="empty-state"><div class="es-icon">${ic('pin',22)}</div><h3>ابدأ باختيار وجهة حقيقية</h3><p>استخدم البحث في الصفحة الرئيسية للوصول إلى مدينة أو مكان من بيانات الخرائط المفتوحة.</p><button class="btn navy sm" onclick="go('home')">العودة للبحث</button></div>`;
+   P.innerHTML = `<div class="empty-state"><div class="es-icon">${ic('pin',22)}</div><h3>لا توجد وجهة مختارة</h3><button class="btn navy sm" onclick="go('home')">العودة للبحث</button></div>`;
    return false;
  };
  const chooseDestination = (item) => {
@@ -1002,7 +998,6 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
     <div class="home-hero">
       <span class="greeting">MY SINDBAD · مرحباً بك</span>
       <h2>إلى أين تأخذك الرحلة؟</h2>
-      <p>ابحث عن أي مدينة حول العالم، واحصل على أماكن وطقس وخرائط من مصادر حقيقية.</p>
       <div class="home-search">
        <input class="inp" id="q" placeholder="اكتب اسم مدينة أو دولة..." autocomplete="off" onkeydown="if(event.key==='Enter')doSearch()">
        <button class="btn navy sm" onclick="doSearch()">${ic('nav',14)} بحث</button>
@@ -1016,8 +1011,8 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
       <button class="cat" onclick="go('trip')"><span class="ci">${ic('cal',18)}</span>رحلتي</button>
     </div>
     <div class="sec">رحلتي الحالية</div>
-    ${t ? `<div class="trip-summary"><div><h2>${esc(t.destinationName || t.city || 'وجهتك')}</h2><p>${esc(t.from)} ← ${esc(t.to)}</p></div><button class="btn sm ghost" onclick="go('trip')">عرض الخطة</button></div>` : `<div class="empty-state"><div class="es-icon">${ic('plane',22)}</div><h3>لم تنشئ رحلة بعد</h3><p>اختر وجهة أولاً، ثم أنشئ جدولاً قابلاً للتعديل واحفظ قائمة تجهيزاتك.</p><button class="btn navy sm" onclick="go('trip')">إنشاء رحلة</button></div>`}
-    <div class="card" style="margin-top:1rem"><b style="color:var(--navy-900)">خدمات مباشرة</b><p style="font-size:.76rem;color:var(--text-muted);line-height:1.7;margin-top:.4rem">بيانات الأماكن من OpenStreetMap، الطقس من Open-Meteo، وأسعار الصرف من ExchangeRate-API. لا نعرض نتائج تجريبية عند غياب المصدر.</p></div>`;
+     ${t ? `<div class="trip-summary"><div><h2>${esc(t.destinationName || t.city || 'وجهتك')}</h2><p>${esc(t.from)} ← ${esc(t.to)}</p></div><button class="btn sm ghost" onclick="go('trip')">عرض الخطة</button></div>` : `<div class="empty-state"><div class="es-icon">${ic('plane',22)}</div><h3>لم تنشئ رحلة بعد</h3><button class="btn navy sm" onclick="go('trip')">إنشاء رحلة</button></div>`}
+     <div class="card" style="margin-top:1rem"><b style="color:var(--navy-900)">خدمات مباشرة</b></div>`;
  }
  function doSearch() {
    const q = $('q')?.value.trim();
@@ -1025,7 +1020,7 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
    if (!q || !box) return;
    box.innerHTML = `<div class="card" style="color:var(--text-muted);text-align:center">جارِ البحث في الخرائط...</div>`;
    apiGet(`/api/search?q=${encodeURIComponent(q)}`).then((items) => {
-     box.innerHTML = items.length ? `<div class="sec">نتائج البحث</div><div class="card">${items.map((item) => `<button class="search-result" onclick='chooseDestination(${JSON.stringify(item).replace(/'/g, '&#39;')})'><span class="ci">${ic('pin',16)}</span><span><b>${esc(item.name)}</b><small>${esc(item.displayName)}</small></span><span>←</span></button>`).join('')}</div>` : `<div class="empty-state"><h3>لم نجد هذه الوجهة</h3><p>جرّب كتابة اسم المدينة أو الدولة بطريقة مختلفة.</p></div>`;
+     box.innerHTML = items.length ? `<div class="sec">نتائج البحث</div><div class="card">${items.map((item) => `<button class="search-result" onclick='chooseDestination(${JSON.stringify(item).replace(/'/g, '&#39;')})'><span class="ci">${ic('pin',16)}</span><span><b>${esc(item.name)}</b><small>${esc(item.displayName)}</small></span><span>←</span></button>`).join('')}</div>` : `<div class="empty-state"><h3>لم نجد هذه الوجهة</h3></div>`;
    }).catch(() => { box.innerHTML = `<div class="empty-state"><h3>تعذر البحث الآن</h3><p>تحقق من اتصال الخادم وحاول مرة أخرى.</p></div>`; });
  }
  function pgExplore(P) {
@@ -1046,7 +1041,7 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
    apiGet(`/api/places?lat=${destination.lat}&lon=${destination.lon}&kind=${kind}`).then((items) => {
      livePlaces = items;
      box.innerHTML = items.length ? `<div class="live-list">${items.map((item) => `<article class="live-place"><div class="place-icon">${ic(kind==='food'?'food':kind==='hotels'?'hotel':'pin',20)}</div><div><h3>${esc(item.name)}</h3><p>${esc(item.address || 'بيانات العنوان غير متوفرة من المصدر')}</p>${item.website ? `<a href="${esc(item.website)}" target="_blank" rel="noreferrer">الموقع الرسمي</a>` : ''}</div><button class="btn sm ghost" onclick="addLivePlace(${JSON.stringify(item).replace(/'/g, '&#39;')})">إضافة</button></article>`).join('')}</div>` : `<div class="empty-state"><h3>لا توجد نتائج موثقة قريبة</h3><p>المصدر المفتوح لم يعثر على ${kind==='food'?'مطاعم':kind==='hotels'?'فنادق':'أماكن سياحية'} حول هذه الإحداثيات.</p></div>`;
-   }).catch(() => { box.innerHTML = `<div class="empty-state"><h3>تعذر تحميل الأماكن</h3><p>الخدمة الخارجية غير متاحة حالياً. لن نعرض بيانات بديلة أو مختلقة.</p></div>`; });
+   }).catch(() => { box.innerHTML = `<div class="empty-state"><h3>تعذر تحميل الأماكن</h3></div>`; });
  }
  function addLivePlace(item) {
    if (!destination) return;
@@ -1059,7 +1054,7 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
  function pgTrip(P) {
    const t = lg('sb_trip', null);
    if (!t) {
-     P.innerHTML = `<div class="sec">تخطيط رحلة جديدة</div><div class="empty-state"><div class="es-icon">${ic('plane',22)}</div><h3>${destination ? `رحلة إلى ${destinationLabel()}` : 'اختر وجهة قبل التخطيط'}</h3><p>حدد تواريخ السفر لإنشاء جدول يومي تفاعلي وقائمة تجهيزات.</p>${destination ? `<div class="card"><label>تاريخ الذهاب<input class="inp" type="date" id="tFrom"></label><label>تاريخ العودة<input class="inp" type="date" id="tTo"></label><button class="btn navy w" onclick="mkTrip()">إنشاء خطة الرحلة</button></div>` : `<button class="btn navy sm" onclick="go('home')">البحث عن وجهة</button>`}</div>`;
+      P.innerHTML = `<div class="sec">تخطيط رحلة جديدة</div><div class="empty-state"><div class="es-icon">${ic('plane',22)}</div><h3>${destination ? `رحلة إلى ${destinationLabel()}` : 'لا توجد وجهة مختارة'}</h3>${destination ? `<div class="card"><label>تاريخ الذهاب<input class="inp" type="date" id="tFrom"></label><label>تاريخ العودة<input class="inp" type="date" id="tTo"></label><button class="btn navy w" onclick="mkTrip()">إنشاء خطة الرحلة</button></div>` : `<button class="btn navy sm" onclick="go('home')">البحث عن وجهة</button>`}</div>`;
      return;
    }
    const days = Math.min(14, Math.max(1, Math.round((new Date(t.to)-new Date(t.from))/864e5)+1));
