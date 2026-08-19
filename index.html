@@ -43,7 +43,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', system-ui, -apple-system, sans-serif; }
 html { scroll-behavior: auto; }
-*, *::before, *::after { animation: none !important; transition: none !important; }
+*, *::before, *::after { transition: color .18s ease, background-color .18s ease, border-color .18s ease, transform .18s ease; }
 body {
   background: #060d1a;
   color: var(--text-main);
@@ -556,7 +556,7 @@ iframe.map { width: 100%; height: 240px; border: 1px solid var(--border); border
 }
 .brand-logo { box-shadow: 0 2px 8px rgba(11, 27, 51, 0.14); }
 .foot { text-align: center; color: var(--text-light); font-size: 0.68rem; padding: 1.2rem 0 0.5rem; }
-</style>
+<style>body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom:calc(82px + env(safe-area-inset-bottom));box-shadow:0 0 60px rgba(0,0,0,.28)}.content{padding:20px 18px 10px}.hdr{position:sticky;top:0;z-index:5;background:rgba(251,249,245,.97);border-bottom:1px solid var(--border);padding:calc(14px + env(safe-area-inset-top)) 18px 12px}.brand-logo{width:38px;height:38px;border-radius:12px}.u{gap:8px}.u .av{width:36px;height:36px;border-radius:50%;background:var(--navy-900);color:#fff;display:grid;place-items:center}.u button{width:40px;height:40px;border:1px solid var(--border);background:#fff;border-radius:12px;color:var(--text-muted);display:grid;place-items:center}.home-hero{padding:10px 2px 18px}.home-hero .greeting{font-size:.7rem;color:var(--gold-dark);font-weight:700;letter-spacing:.04em}.home-hero h2{font-size:1.42rem;line-height:1.5;margin-top:6px}.home-hero p{font-size:.78rem;line-height:1.8;color:var(--text-muted);margin-top:4px}.cats{grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:24px}.cat{min-height:72px;border-radius:16px;background:#fff;color:var(--navy-900);font-size:.68rem}.cat .ci{color:var(--gold-dark)}.destination-grid{display:none}.bnav{grid-template-columns:repeat(5,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);border-top:1px solid var(--border)}.bnav button{min-height:54px;border-radius:12px;font-size:.61rem;gap:4px}.bnav button.on{background:#f3f5f8;color:var(--navy-900)}.map{height:280px;border-radius:18px}.sugs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.sugs .chip{min-height:48px;white-space:normal}.btn{transition:transform .18s ease,background .18s ease}.btn:active{transform:scale(.98)}@media(min-width:700px){.shell{margin:22px auto;min-height:calc(100dvh - 44px);border-radius:28px;overflow:hidden}.bnav{position:absolute;border-radius:0 0 28px 28px}.hdr{position:relative}}</style></style>
 </head>
 <body>
 <div class="shell" id="shell"></div>
@@ -604,7 +604,7 @@ const CITY_IMAGES={
  paris:'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=700&q=82'
 };
 const RATES={USD:1,EUR:.92,GBP:.79,TRY:33,MAD:10.1,AED:3.67,SAR:3.75,EGP:47.5};
-const NAVB=[{id:'home',t:'الرئيسية',i:'home'},{id:'trip',t:'رحلتي',i:'plane'},{id:'explore',t:'استكشف',i:'compass'},{id:'map',t:'الخريطة',i:'map'},{id:'community',t:'المجتمع',i:'cam'},{id:'bot',t:'المساعد',i:'chat'}];
+const NAVB=[{id:'home',t:'الرئيسية',i:'home'},{id:'explore',t:'استكشف',i:'compass'},{id:'trip',t:'رحلتي',i:'plane'},{id:'map',t:'الخريطة',i:'map'},{id:'bot',t:'مساعد السفر',i:'chat'}];
 const $=id=>document.getElementById(id);
 const ls=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 const lg=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d;}catch(e){return d;}};
@@ -658,8 +658,8 @@ const cityChips=()=>`<div class="row" style="margin-bottom:.85rem">${Object.keys
 function pgHome(P){const t=lg('sb_trip',null);
  P.innerHTML=`
   <div class="home-hero">
-    <span class="greeting">أهلًا ${esc(session.name)}</span>
-   <h2>إلى أين وجهتك القادمة؟</h2>
+    <span class="greeting">MY SINDBAD · أهلًا ${esc(session.name)}</span>
+   <h2>إلى أين تأخذك الرحلة؟</h2>
    <div class="home-search">
     <input class="inp" id="q" placeholder="ابحث عن مدينة أو وجهة..." onkeydown="if(event.key==='Enter')doSearch()">
     <button class="btn navy sm" onclick="doSearch()">${ic('nav',14)} بحث</button>
@@ -679,11 +679,11 @@ function pgHome(P){const t=lg('sb_trip',null);
   </div>`:`
   <div class="empty-state">
    <div class="es-icon">${ic('plane',22)}</div>
-   <h3>ابدأ رحلتك الأولى</h3>
-   <p>نظّم مسار أيامك، أضف الأنشطة والمواعيد، وتابع قائمة تجهيزات السفر بكل سهولة.</p>
+   <h3>ابدأ رحلتك القادمة</h3>
+   <p>أنشئ خطة سفر مخصصة، وأضف الأيام والمهام التي تهمك.</p>
    <button class="btn navy sm" onclick="go('trip')">إنشاء رحلة</button>
   </div>`}
-   <div class="sec">وجهات ملهمة</div>
+   
    <div class="destination-grid">
     ${Object.keys(CITIES).map(c=>`<button class="destination-card" onclick="city='${c}';go('explore')" aria-label="استكشف ${CITIES[c].n}">
       <img src="${CITY_IMAGES[c]}" alt="" loading="lazy">
@@ -810,9 +810,9 @@ function addPost(){const f=$('pFile').files[0],cap=$('pCap').value.trim();
 function likePost(ix){const p=lg('sb_posts',[]);p[ix].likes=(p[ix].likes||0)+1;ls('sb_posts',p);render();}
 
 function pgBot(P){P.innerHTML=`
-  <div class="sec">مساعد السفر</div>
-   <div class="chat" id="chatBox">${chat.map(m=>`<div class="msg ${m.who}">${esc(m.txt).replace(/\n/g,'<br>')}</div>`).join('')||`<div class="msg bot">مرحباً ${esc(session.name)}! أنا مساعد السفر الخاص بك في My Sindbad. كيف يمكنني مساعدتك في تخطيط رحلتك اليوم؟</div>`}</div>
-  <div class="sugs">${['نصائح تجهيز حقيبة السفر','كيف أحول العملات؟','أهم نصائح السفر الدولي','كيف أنظم خطة رحلتي؟'].map(s=>`<button class="chip" onclick="ask('${s}')">${s}</button>`).join('')}</div>
+  <div class="sec">Sindbad Concierge</div>
+   <div class="chat" id="chatBox">${chat.map(m=>`<div class="msg ${m.who}">${esc(m.txt).replace(/\n/g,'<br>')}</div>`).join('')||`<div class="msg bot">مرحبًا ${esc(session.name)}. أنا سندباد، وسأساعدك في تفاصيل رحلتك.</div>`}</div>
+  <div class="sugs">${['جهز حقيبتي','اكتشف وجهة','ساعدني أثناء السفر','خطط رحلتي'].map(s=>`<button class="chip" onclick="ask('${s}')">${s}</button>`).join('')}</div>
   <div style="display:flex;gap:.45rem"><input class="inp" id="bIn" placeholder="اكتب استفسارك هنا..." onkeydown="if(event.key==='Enter')ask()"><button class="btn navy" onclick="ask()">${ic('send',15)}</button></div>`;
  const cb=$('chatBox');cb.scrollTop=cb.scrollHeight;}
 function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
