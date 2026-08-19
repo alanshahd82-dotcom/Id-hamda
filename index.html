@@ -648,7 +648,7 @@ function appHTML(){return `
   <div class="u"><div class="av">${(session.name||'ز').charAt(0)}</div><button onclick="doOut()" title="تسجيل الخروج">${ic('out',16)}</button></div>
  </div>
  <div class="content" id="pg"></div>
- <div class="foot">My Sindbad — جميع الحقوق محفوظة</div>
+ <div class="foot"></div>
  <div class="bnav">${NAVB.map(n=>`<button class="${n.id===page?'on':''}" onclick="go('${n.id}')">${ic(n.i,18)}<span>${n.t}</span></button>`).join('')}</div>`;}
 function go(p){page=p;render();}
 function bind(){const P=$('pg');if(!P)return;({home:pgHome,trip:pgTrip,explore:pgExplore,map:pgMap,community:pgCommunity,bot:pgBot})[page](P);}
