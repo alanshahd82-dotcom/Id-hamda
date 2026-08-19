@@ -42,6 +42,8 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', system-ui, -apple-system, sans-serif; }
+html { scroll-behavior: auto; }
+*, *::before, *::after { animation: none !important; transition: none !important; }
 body {
   background: #060d1a;
   color: var(--text-main);
@@ -50,6 +52,7 @@ body {
   display: flex;
   justify-content: center;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 .hidden { display: none !important; }
 .en { font-family: 'Playfair Display', Georgia, serif; }
@@ -83,7 +86,6 @@ body {
   font-size: 0.88rem;
   background: var(--surface);
   color: var(--text-main);
-  transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
 }
 .inp:focus {
@@ -116,10 +118,9 @@ label .inp { margin-top: 0.35rem; }
   font-size: 0.88rem;
   cursor: pointer;
   font-family: inherit;
-  transition: background 0.2s, transform 0.1s, opacity 0.2s;
   text-decoration: none;
 }
-.btn:active { transform: scale(0.98); }
+.btn:active { transform: none; }
 .btn.navy { background: var(--navy-800); color: #fff; }
 .btn.navy:hover { background: var(--navy-900); }
 .btn.ghost {
@@ -231,7 +232,6 @@ label .inp { margin-top: 0.35rem; }
   color: var(--text-muted);
   cursor: pointer;
   font-family: inherit;
-  transition: background 0.2s, color 0.2s;
 }
 .auth-card .tabs button.on { background: var(--surface); color: var(--navy-900); font-weight: 700; box-shadow: var(--shadow-sm); }
 .auth-card .err { color: var(--danger); font-size: 0.75rem; min-height: 1.2rem; margin: 0.25rem 0; }
@@ -267,8 +267,7 @@ label .inp { margin-top: 0.35rem; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 30;
 }
 .hdr .brand { display: flex; align-items: center; gap: 0.65rem; }
@@ -301,7 +300,6 @@ label .inp { margin-top: 0.35rem; }
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-sm);
-  transition: color 0.2s, background 0.2s;
 }
 .hdr button:hover { color: var(--danger); background: var(--danger-light); }
 
@@ -318,7 +316,6 @@ label .inp { margin-top: 0.35rem; }
   border-radius: var(--radius-md);
   padding: 0.3rem 0.45rem 0.3rem 0.85rem;
   box-shadow: var(--shadow-sm);
-  transition: border-color 0.2s;
 }
 .home-search:focus-within { border-color: var(--navy-700); }
 .home-search .inp { border: none; padding: 0.45rem 0; font-size: 0.86rem; flex: 1; min-height: auto; }
@@ -342,7 +339,6 @@ label .inp { margin-top: 0.35rem; }
   cursor: pointer;
   font-family: inherit;
   box-shadow: var(--shadow-sm);
-  transition: border-color 0.2s, background 0.2s;
   min-height: 72px;
   justify-content: center;
 }
@@ -356,7 +352,6 @@ label .inp { margin-top: 0.35rem; }
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, color 0.2s;
 }
 .cat:hover .ci { background: var(--navy-800); color: #fff; }
 
@@ -374,7 +369,6 @@ label .inp { margin-top: 0.35rem; }
   cursor: pointer;
   white-space: nowrap;
   font-family: inherit;
-  transition: all 0.2s;
   min-height: 36px;
   display: inline-flex;
   align-items: center;
@@ -440,7 +434,7 @@ label .inp { margin-top: 0.35rem; }
 .check input { accent-color: var(--navy-800); width: 18px; height: 18px; cursor: pointer; }
 .check .done { text-decoration: line-through; color: var(--text-light); }
 .prog { height: 6px; background: var(--border); border-radius: var(--radius-full); overflow: hidden; margin: 0.5rem 0 0.8rem; }
-.prog i { display: block; height: 100%; background: var(--gold); border-radius: var(--radius-full); transition: width 0.3s; }
+.prog i { display: block; height: 100%; background: var(--gold); border-radius: var(--radius-full); }
 
 /* الخريطة والأدوات */
 iframe.map { width: 100%; height: 240px; border: 1px solid var(--border); border-radius: var(--radius-md); }
@@ -509,9 +503,8 @@ iframe.map { width: 100%; height: 240px; border: 1px solid var(--border); border
   cursor: pointer;
   font-family: inherit;
   position: relative;
-  transition: color 0.2s, transform 0.1s;
 }
-.bnav button:active { transform: scale(0.96); }
+.bnav button:active { transform: none; }
 .bnav button.on { color: var(--navy-900); font-weight: 700; }
 .bnav button.on::after {
   content: '';
