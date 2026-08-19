@@ -189,7 +189,9 @@ label .inp { margin-top: 0.35rem; }
 /* شاشة الدخول */
 .auth {
   min-height: 100vh;
-  background: linear-gradient(180deg, var(--navy-950) 0%, var(--navy-900) 100%);
+  background:
+    radial-gradient(circle at 50% -10%, rgba(197,168,128,.22), transparent 34%),
+    linear-gradient(180deg, var(--navy-950) 0%, var(--navy-900) 100%);
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -201,7 +203,7 @@ label .inp { margin-top: 0.35rem; }
 .auth .logo { width: 76px; height: 76px; margin-bottom: 0.8rem; }
 .auth .logo img { width: 100%; height: 100%; display: block; object-fit: cover; border-radius: 22%; }
 .auth h1 { font-size: 1.85rem; color: #ffffff; letter-spacing: 0.5px; margin-bottom: 0.15rem; }
-.auth .tag { color: var(--gold); font-size: 0.72rem; letter-spacing: 2px; font-weight: 600; margin-bottom: 1.6rem; }
+.auth .tag { color: var(--gold); font-size: 0.76rem; letter-spacing: .4px; font-weight: 700; margin-bottom: 1.6rem; }
 .auth-card {
   background: var(--surface);
   color: var(--text-main);
@@ -258,11 +260,11 @@ label .inp { margin-top: 0.35rem; }
 
 /* الهيدر العلوي */
 .hdr {
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--surface);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-subtle);
-  padding: 0.75rem 1rem;
+  padding: 0.7rem 1rem;
   padding-top: calc(0.75rem + env(safe-area-inset-top));
   display: flex;
   justify-content: space-between;
@@ -271,7 +273,7 @@ label .inp { margin-top: 0.35rem; }
   z-index: 30;
 }
 .hdr .brand { display: flex; align-items: center; gap: 0.65rem; }
-.hdr .brand-logo { width: 34px; height: 34px; display: block; object-fit: cover; border-radius: 22%; flex-shrink: 0; }
+.hdr .brand-logo { width: 38px; height: 38px; display: block; object-fit: cover; border-radius: 22%; flex-shrink: 0; }
 .hdr .brand b { font-size: 1.02rem; color: var(--navy-900); display: block; line-height: 1.1; font-weight: 700; }
 .hdr .brand small { color: var(--text-muted); font-size: 0.64rem; letter-spacing: 0.5px; }
 .hdr .u { display: flex; align-items: center; gap: 0.6rem; }
@@ -304,9 +306,17 @@ label .inp { margin-top: 0.35rem; }
 .hdr button:hover { color: var(--danger); background: var(--danger-light); }
 
 /* الصفحة الرئيسية — ترويسة وبحث */
-.home-hero { margin-bottom: 1.2rem; padding: 0.2rem 0; }
-.home-hero .greeting { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-bottom: 0.2rem; display: block; }
-.home-hero h2 { font-size: 1.35rem; color: var(--navy-900); font-weight: 800; line-height: 1.3; margin-bottom: 0.85rem; }
+.home-hero {
+  margin-bottom: 1.2rem;
+  padding: 1.1rem;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(197,168,128,.2), transparent 36%),
+    linear-gradient(135deg, var(--navy-900), var(--navy-800));
+  box-shadow: 0 10px 24px rgba(11, 27, 51, .14);
+}
+.home-hero .greeting { font-size: 0.8rem; color: #d9e2ef; font-weight: 600; margin-bottom: 0.2rem; display: block; }
+.home-hero h2 { font-size: 1.35rem; color: #ffffff; font-weight: 800; line-height: 1.3; margin-bottom: 0.85rem; }
 .home-search {
   display: flex;
   align-items: center;
@@ -315,7 +325,7 @@ label .inp { margin-top: 0.35rem; }
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 0.3rem 0.45rem 0.3rem 0.85rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 5px 14px rgba(6, 14, 26, .14);
 }
 .home-search:focus-within { border-color: var(--navy-700); }
 .home-search .inp { border: none; padding: 0.45rem 0; font-size: 0.86rem; flex: 1; min-height: auto; }
@@ -338,7 +348,7 @@ label .inp { margin-top: 0.35rem; }
   color: var(--navy-900);
   cursor: pointer;
   font-family: inherit;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 3px 10px rgba(11, 27, 51, .05);
   min-height: 72px;
   justify-content: center;
 }
@@ -477,7 +487,7 @@ iframe.map { width: 100%; height: 240px; border: 1px solid var(--border); border
   transform: translateX(-50%);
   width: 100%;
   max-width: 440px;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--surface);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   display: flex;
@@ -506,6 +516,7 @@ iframe.map { width: 100%; height: 240px; border: 1px solid var(--border); border
 }
 .bnav button:active { transform: none; }
 .bnav button.on { color: var(--navy-900); font-weight: 700; }
+.bnav button.on { background: var(--gold-light); border-radius: var(--radius-md); }
 .bnav button.on::after {
   content: '';
   position: absolute;
@@ -571,7 +582,7 @@ function authHTML(){return `
  <div class="auth">
   <div class="logo">${LOGO}</div>
   <h1 class="en">My Sindbad</h1>
-  <div class="tag">PREMIUM TRAVEL EXPERIENCE</div>
+   <div class="tag">رفيقك الذكي لاكتشاف العالم</div>
   <div class="auth-card">
    <div class="tabs">
     <button class="${authTab==='login'?'on':''}" onclick="authTab='login';render()">تسجيل الدخول</button>
@@ -612,7 +623,7 @@ const cityChips=()=>`<div class="row" style="margin-bottom:.85rem">${Object.keys
 function pgHome(P){const t=lg('sb_trip',null);
  P.innerHTML=`
   <div class="home-hero">
-   <span class="greeting">مرحباً ${esc(session.name)} 👋</span>
+    <span class="greeting">أهلًا ${esc(session.name)}</span>
    <h2>إلى أين وجهتك القادمة؟</h2>
    <div class="home-search">
     <input class="inp" id="q" placeholder="ابحث عن مدينة أو وجهة..." onkeydown="if(event.key==='Enter')doSearch()">
