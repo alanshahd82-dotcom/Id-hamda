@@ -1,11 +1,12 @@
-const CACHE_NAME = 'my-sindbad-v2';
+const CACHE_NAME = 'my-sindbad-v3';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
   './icons/icon.svg',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './icons/brand-logo.jpg'
 ];
 
 self.addEventListener('install', (event) => {
