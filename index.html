@@ -562,7 +562,8 @@ iframe.map { width: 100%; height: 240px; border: 1px solid var(--border); border
     .home-hero>*{position:relative;z-index:1}.home-hero .greeting{font-size:.66rem;letter-spacing:.12em;color:#f1d6a6;font-weight:700}.home-hero h2{max-width:310px;font-size:1.8rem;line-height:1.35;color:#fff;margin:8px 0 0;text-shadow:0 2px 12px rgba(0,0,0,.22)}.home-hero .home-search{margin-top:20px}.home-search .inp{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35);color:#fff;backdrop-filter:blur(12px)}.home-search .inp::placeholder{color:rgba(255,255,255,.78)}.home-search .btn{background:#ef791f;color:#fff;border-radius:999px;box-shadow:0 8px 18px rgba(0,0,0,.2)}
     .cats{margin:0 0 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.cat{min-height:66px;background:#fff;border:1px solid var(--border);border-radius:18px;color:var(--navy-900);font-size:.66rem}.cat .ci{color:#d77725}.trip-summary{min-height:150px;border:0;border-radius:24px;padding:18px;background-image:linear-gradient(180deg,rgba(4,17,28,.08),rgba(4,17,28,.82)),url('https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=84');background-size:cover;background-position:center;color:#fff;box-shadow:0 14px 28px rgba(4,17,28,.16)}.trip-summary h2,.trip-summary p{color:#fff}.trip-summary .btn{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.36);color:#fff;backdrop-filter:blur(10px)}.empty-state{border-radius:24px;background:#fff}.bnav{background:rgba(5,17,28,.92);border-top:1px solid rgba(255,255,255,.14);backdrop-filter:blur(18px)}.bnav button{color:rgba(255,255,255,.62);border-radius:50%;font-size:.58rem}.bnav button.on{background:rgba(255,255,255,.13);color:#fff}.bnav button.on svg{color:#f09a53}
     @media(min-width:700px){.home-hero{margin:-24px -24px 24px;min-height:560px;border-radius:0 0 30px 30px}}
-    </style></style></style>
+     .search-result{width:100%;display:flex;align-items:center;gap:.7rem;text-align:right;border:0;border-bottom:1px solid var(--border-subtle);background:none;padding:.8rem .2rem;color:var(--text-main);cursor:pointer;font-family:inherit}.search-result:last-child{border-bottom:0}.search-result .ci{width:34px;height:34px;border-radius:10px;background:var(--navy-50);color:var(--navy-800);display:grid;place-items:center;flex-shrink:0}.search-result span:nth-child(2){flex:1}.search-result b,.search-result small{display:block}.search-result b{font-size:.82rem}.search-result small{font-size:.68rem;color:var(--text-muted);margin-top:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.live-list{display:grid;gap:.7rem}.live-place{display:flex;align-items:flex-start;gap:.7rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.8rem;box-shadow:var(--shadow-sm)}.live-place>div:nth-child(2){flex:1;min-width:0}.live-place h3{font-size:.84rem;color:var(--navy-900);margin-bottom:.2rem}.live-place p{font-size:.69rem;color:var(--text-muted);line-height:1.5}.live-place a{font-size:.68rem;color:var(--gold-dark);display:inline-block;margin-top:.3rem}.place-icon{width:36px;height:36px;border-radius:12px;background:var(--navy-50);color:var(--gold-dark);display:grid;place-items:center;flex-shrink:0}.live-place .btn{flex-shrink:0}
+     </style></style></style>
 </head>
 <body>
 <div class="shell" id="shell"></div>
@@ -831,7 +832,131 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
  else a='يسعدني تقديم المساعدة في تخطيط رحلتك، مراجعة قائمة التجهيزات، أو معرفة أسعار الصرف. هل تود البدء بإنشاء خطة رحلة جديدة؟';
  chat.push({who:'bot',txt:a});render();}
 
-render();
+ /* ===== التشغيل الحقيقي بدون بيانات ثابتة ===== */
+ let destination = lg('sb_destination', null);
+ let livePlaces = [];
+ let liveRates = null;
+ let liveError = '';
+ const apiGet = (path) => fetch(path).then((res) => {
+   if (!res.ok) throw new Error('api_error');
+   return res.json();
+ });
+ const destinationLabel = () => destination ? `${esc(destination.name)}${destination.country ? ` — ${esc(destination.country)}` : ''}` : 'اختر وجهتك من البحث';
+ const requireDestination = (P) => {
+   if (destination) return true;
+   P.innerHTML = `<div class="empty-state"><div class="es-icon">${ic('pin',22)}</div><h3>ابدأ باختيار وجهة حقيقية</h3><p>استخدم البحث في الصفحة الرئيسية للوصول إلى مدينة أو مكان من بيانات الخرائط المفتوحة.</p><button class="btn navy sm" onclick="go('home')">العودة للبحث</button></div>`;
+   return false;
+ };
+ const chooseDestination = (item) => {
+   destination = item;
+   city = item.name;
+   ls('sb_destination', item);
+   livePlaces = [];
+   liveError = '';
+   go('explore');
+ };
+ function render() {
+   session = session || { name: 'مسافر' };
+   $('shell').innerHTML = appHTML();
+   bind();
+ }
+ function bind() {
+   const P = $('pg');
+   if (!P) return;
+   const pages = { home: pgHome, explore: pgExplore, trip: pgTrip, map: pgMap, bot: pgBot };
+   (pages[page] || pgHome)(P);
+ }
+ function pgHome(P) {
+   const t = lg('sb_trip', null);
+   P.innerHTML = `
+    <div class="home-hero">
+      <span class="greeting">MY SINDBAD · مرحباً بك</span>
+      <h2>إلى أين تأخذك الرحلة؟</h2>
+      <p>ابحث عن أي مدينة حول العالم، واحصل على أماكن وطقس وخرائط من مصادر حقيقية.</p>
+      <div class="home-search">
+       <input class="inp" id="q" placeholder="اكتب اسم مدينة أو دولة..." autocomplete="off" onkeydown="if(event.key==='Enter')doSearch()">
+       <button class="btn navy sm" onclick="doSearch()">${ic('nav',14)} بحث</button>
+      </div>
+    </div>
+    <div id="searchResults"></div>
+    <div class="cats">
+      <button class="cat" onclick="tab='hotels';go('explore')"><span class="ci">${ic('hotel',18)}</span>الفنادق</button>
+      <button class="cat" onclick="tab='rest';go('explore')"><span class="ci">${ic('food',18)}</span>المطاعم</button>
+      <button class="cat" onclick="tab='spots';go('explore')"><span class="ci">${ic('pin',18)}</span>الأماكن</button>
+      <button class="cat" onclick="go('trip')"><span class="ci">${ic('cal',18)}</span>رحلتي</button>
+    </div>
+    <div class="sec">رحلتي الحالية</div>
+    ${t ? `<div class="trip-summary"><div><h2>${esc(t.destinationName || t.city || 'وجهتك')}</h2><p>${esc(t.from)} ← ${esc(t.to)}</p></div><button class="btn sm ghost" onclick="go('trip')">عرض الخطة</button></div>` : `<div class="empty-state"><div class="es-icon">${ic('plane',22)}</div><h3>لم تنشئ رحلة بعد</h3><p>اختر وجهة أولاً، ثم أنشئ جدولاً قابلاً للتعديل واحفظ قائمة تجهيزاتك.</p><button class="btn navy sm" onclick="go('trip')">إنشاء رحلة</button></div>`}
+    <div class="card" style="margin-top:1rem"><b style="color:var(--navy-900)">خدمات مباشرة</b><p style="font-size:.76rem;color:var(--text-muted);line-height:1.7;margin-top:.4rem">بيانات الأماكن من OpenStreetMap، الطقس من Open-Meteo، وأسعار الصرف من Frankfurter. لا نعرض نتائج تجريبية عند غياب المصدر.</p></div>`;
+ }
+ function doSearch() {
+   const q = $('q')?.value.trim();
+   const box = $('searchResults');
+   if (!q || !box) return;
+   box.innerHTML = `<div class="card" style="color:var(--text-muted);text-align:center">جارِ البحث في الخرائط...</div>`;
+   apiGet(`/api/search?q=${encodeURIComponent(q)}`).then((items) => {
+     box.innerHTML = items.length ? `<div class="sec">نتائج البحث</div><div class="card">${items.map((item) => `<button class="search-result" onclick='chooseDestination(${JSON.stringify(item).replace(/'/g, '&#39;')})'><span class="ci">${ic('pin',16)}</span><span><b>${esc(item.name)}</b><small>${esc(item.displayName)}</small></span><span>←</span></button>`).join('')}</div>` : `<div class="empty-state"><h3>لم نجد هذه الوجهة</h3><p>جرّب كتابة اسم المدينة أو الدولة بطريقة مختلفة.</p></div>`;
+   }).catch(() => { box.innerHTML = `<div class="empty-state"><h3>تعذر البحث الآن</h3><p>تحقق من اتصال الخادم وحاول مرة أخرى.</p></div>`; });
+ }
+ function pgExplore(P) {
+   if (!requireDestination(P)) return;
+   P.innerHTML = `<div class="sec">استكشف ${destinationLabel()}</div>
+    <div class="row" style="margin-bottom:.85rem">
+      <button class="chip ${tab==='hotels'?'on':''}" onclick="tab='hotels';loadPlaces()">الفنادق</button>
+      <button class="chip ${tab==='rest'?'on':''}" onclick="tab='rest';loadPlaces()">المطاعم والمقاهي</button>
+      <button class="chip ${tab==='spots'?'on':''}" onclick="tab='spots';loadPlaces()">الأماكن السياحية</button>
+    </div><div id="placesBox"></div>`;
+   loadPlaces();
+ }
+ function loadPlaces() {
+   const box = $('placesBox');
+   if (!box || !destination) return;
+   const kind = tab === 'rest' ? 'food' : tab === 'hotels' ? 'hotels' : 'tourism';
+   box.innerHTML = `<div class="card" style="text-align:center;color:var(--text-muted)">جارِ تحميل الأماكن من OpenStreetMap...</div>`;
+   apiGet(`/api/places?lat=${destination.lat}&lon=${destination.lon}&kind=${kind}`).then((items) => {
+     livePlaces = items;
+     box.innerHTML = items.length ? `<div class="live-list">${items.map((item) => `<article class="live-place"><div class="place-icon">${ic(kind==='food'?'food':kind==='hotels'?'hotel':'pin',20)}</div><div><h3>${esc(item.name)}</h3><p>${esc(item.address || 'بيانات العنوان غير متوفرة من المصدر')}</p>${item.website ? `<a href="${esc(item.website)}" target="_blank" rel="noreferrer">الموقع الرسمي</a>` : ''}</div><button class="btn sm ghost" onclick="addLivePlace(${JSON.stringify(item).replace(/'/g, '&#39;')})">إضافة</button></article>`).join('')}</div>` : `<div class="empty-state"><h3>لا توجد نتائج موثقة قريبة</h3><p>المصدر المفتوح لم يعثر على ${kind==='food'?'مطاعم':kind==='hotels'?'فنادق':'أماكن سياحية'} حول هذه الإحداثيات.</p></div>`;
+   }).catch(() => { box.innerHTML = `<div class="empty-state"><h3>تعذر تحميل الأماكن</h3><p>الخدمة الخارجية غير متاحة حالياً. لن نعرض بيانات بديلة أو مختلقة.</p></div>`; });
+ }
+ function addLivePlace(item) {
+   if (!destination) return;
+   const t = lg('sb_trip', null) || { city: destination.name, destinationName: destination.name, from: '', to: '', days: [[]], check: [] };
+   t.days = Array.isArray(t.days) && t.days.length ? t.days : [[]];
+   t.days[0].push({ title: item.name, time: '10:00', type: tab === 'rest' ? 'مطعم' : tab === 'hotels' ? 'فندق' : 'معلم سياحي' });
+   ls('sb_trip', t);
+   alert('تمت إضافة المكان إلى اليوم الأول من الرحلة.');
+ }
+ function pgTrip(P) {
+   const t = lg('sb_trip', null);
+   if (!t) {
+     P.innerHTML = `<div class="sec">تخطيط رحلة جديدة</div><div class="empty-state"><div class="es-icon">${ic('plane',22)}</div><h3>${destination ? `رحلة إلى ${destinationLabel()}` : 'اختر وجهة قبل التخطيط'}</h3><p>حدد تواريخ السفر لإنشاء جدول يومي تفاعلي وقائمة تجهيزات.</p>${destination ? `<div class="card"><label>تاريخ الذهاب<input class="inp" type="date" id="tFrom"></label><label>تاريخ العودة<input class="inp" type="date" id="tTo"></label><button class="btn navy w" onclick="mkTrip()">إنشاء خطة الرحلة</button></div>` : `<button class="btn navy sm" onclick="go('home')">البحث عن وجهة</button>`}</div>`;
+     return;
+   }
+   const days = Math.min(14, Math.max(1, Math.round((new Date(t.to)-new Date(t.from))/864e5)+1));
+   t.days = Array.isArray(t.days) ? t.days : [];
+   while (t.days.length < days) t.days.push([]);
+   P.innerHTML = `<div class="trip-summary"><div><h2>${esc(t.destinationName || t.city)}</h2><p>${esc(t.from)} ← ${esc(t.to)} • ${days} أيام</p></div><button class="btn sm ghost" onclick="if(confirm('حذف الرحلة؟')){ls('sb_trip',null);render()}">${ic('trash',14)}</button></div><div class="sec">خطة الأيام</div>${Array.from({length:days},(_,d)=>`<div class="day-h">اليوم ${d+1}</div><div class="timeline">${t.days[d].map((it,ix)=>`<div class="tl"><button class="del" onclick="delItem(${d},${ix})">${ic('trash',13)}</button><b>${esc(it.title)}</b><small>${esc(it.time)} • ${esc(it.type)}</small></div>`).join('') || '<small style="color:var(--text-muted);display:block;padding:.4rem 0">لا توجد أنشطة بعد</small>'}</div>`).join('')}<div class="card"><div class="sec" style="margin-top:0">إضافة نشاط</div><div class="grid2"><label>اليوم<select class="inp" id="iDay">${Array.from({length:days},(_,d)=>`<option value="${d}">اليوم ${d+1}</option>`).join('')}</select></label><label>الوقت<input class="inp" type="time" id="iTime" value="10:00"></label></div><label>النشاط<input class="inp" id="iTitle" placeholder="مثال: زيارة المعالم التاريخية"></label><label>النوع<select class="inp" id="iType"><option>معلم سياحي</option><option>تنقل</option><option>مطعم</option><option>فندق</option><option>تسوق</option></select></label><button class="btn navy w" onclick="addItem()">إضافة النشاط</button></div><div class="sec">قائمة التجهيزات</div><div class="card">${t.check.map((c,ix)=>`<div class="check"><input type="checkbox" ${c.done?'checked':''} onchange="togCheck(${ix})"><span class="${c.done?'done':''}">${esc(c.t)}</span></div>`).join('')}<div style="display:flex;gap:.45rem;margin-top:.85rem"><input class="inp" id="newCh" placeholder="إضافة حاجة جديدة..."><button class="btn sm navy" onclick="addCheck()">إضافة</button></div></div>`;
+ }
+ function mkTrip() {
+   const from = $('tFrom')?.value;
+   const to = $('tTo')?.value;
+   if (!destination || !from || !to || new Date(to) < new Date(from)) { alert('اختر وجهة وتواريخ صحيحة.'); return; }
+   ls('sb_trip', { city: destination.name, destinationName: destination.name, from, to, days: [], check: ['جواز السفر','تذاكر السفر','حجز الفندق','تأمين السفر','شاحن الهاتف'].map((t) => ({t, done:false})) });
+   render();
+ }
+ function addItem() { const t=lg('sb_trip',null); const title=$('iTitle')?.value.trim(); if(!t||!title)return; t.days[+$('iDay').value].push({title,time:$('iTime').value,type:$('iType').value}); ls('sb_trip',t); render(); }
+ function delItem(d,ix) { const t=lg('sb_trip',null); if(!t)return; t.days[d].splice(ix,1); ls('sb_trip',t); render(); }
+ function togCheck(ix) { const t=lg('sb_trip',null); if(!t)return; t.check[ix].done=!t.check[ix].done; ls('sb_trip',t); render(); }
+ function addCheck() { const value=$('newCh')?.value.trim(), t=lg('sb_trip',null); if(!value||!t)return; t.check.push({t:value,done:false}); ls('sb_trip',t); render(); }
+ function pgMap(P) {
+   if (!requireDestination(P)) return;
+   P.innerHTML = `<div class="sec">الخريطة والأدوات — ${destinationLabel()}</div><iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=${destination.lon-.08}%2C${destination.lat-.05}%2C${destination.lon+.08}%2C${destination.lat+.05}&layer=mapnik&marker=${destination.lat}%2C${destination.lon}"></iframe><div style="margin:.65rem 0"><a class="btn sm ghost w" target="_blank" rel="noreferrer" href="https://www.google.com/maps/@${destination.lat},${destination.lon},13z">${ic('map',15)} فتح في خرائط جوجل</a></div><div class="tools"><div class="card" style="margin:0"><div class="sec" style="margin:0 0 .45rem">الطقس الآن</div><div id="wBox" style="font-size:.76rem;color:var(--text-muted)">جارِ التحميل...</div></div><div class="card" style="margin:0"><div class="sec" style="margin:0 0 .45rem">تحويل العملات</div><input class="inp" type="number" id="cvA" value="100" oninput="doCv()" style="margin-bottom:.45rem"><div class="grid2"><select class="inp" id="cvF" onchange="doCv()"><option>MAD</option><option>EUR</option><option>USD</option><option>GBP</option><option>TRY</option><option>AED</option></select><select class="inp" id="cvT" onchange="doCv()"><option>EUR</option><option>MAD</option><option>USD</option><option>GBP</option><option>TRY</option><option>AED</option></select></div><div id="cvR" style="font-weight:800;color:var(--navy-900);margin-top:.45rem;font-size:.88rem">جارِ التحميل...</div><small style="color:var(--text-light);font-size:.64rem">سعر مباشر من Frankfurter</small></div></div>`;
+   apiGet(`/api/weather?lat=${destination.lat}&lon=${destination.lon}`).then((data) => { const w=data.current, box=$('wBox'); if(box&&w)box.innerHTML=`<b>${Math.round(w.temperature_2m)}°</b> ${wtxt(w.weather_code)}<br><span style="font-size:.7rem">الرطوبة: ${w.relative_humidity_2m}% • الرياح: ${Math.round(w.wind_speed_10m)} كم/س</span>`; }).catch(()=>{if($('wBox'))$('wBox').textContent='تعذر الاتصال بخدمة الطقس';});
+   apiGet('/api/rates?base=MAD').then((data) => { liveRates=data; doCv(); }).catch(()=>{if($('cvR'))$('cvR').textContent='تعذر تحميل سعر الصرف';});
+ }
+ function doCv() { const box=$('cvR'); if(!box||!liveRates)return; const amount=Number($('cvA').value)||0, from=$('cvF').value, to=$('cvT').value; const rates={MAD:1,...liveRates.rates}; if(from==='MAD'&&rates[to])box.textContent=`${(amount*rates[to]).toFixed(2)} ${to}`; else if(rates[from]&&rates[to])box.textContent=`${(amount/rates[from]*rates[to]).toFixed(2)} ${to}`; }
+ function pgBot(P) { P.innerHTML=`<div class="sec">مساعد السفر</div><div class="card"><div class="es-icon">${ic('chat',22)}</div><h3>مساعدك أثناء الرحلة</h3><p style="font-size:.8rem;line-height:1.7;color:var(--text-muted)">هذه الصفحة تربطك بالخدمات الحية للتخطيط. اختر إحدى الأدوات للحصول على نتيجة موثقة، ولن نعرض إجابات مولدة أو معلومات غير مؤكدة.</p><div class="tools"><button class="btn ghost" onclick="go('explore')">استكشاف الأماكن</button><button class="btn ghost" onclick="go('map')">الطقس والصرف</button><button class="btn ghost" onclick="go('trip')">إدارة الرحلة</button><button class="btn ghost" onclick="go('home')">البحث عن وجهة</button></div></div>`; }
+ render();
 </script>
 <script>
 if ('serviceWorker' in navigator) {
