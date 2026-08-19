@@ -604,9 +604,18 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
        }
        .live-indicator {
          margin-top: .08rem;
-         font-size: .58rem;
+         font-size: .6rem;
          color: #147a3c;
+         transition: color .2s ease;
        }
+       .live-indicator.offline { color: #b45309; }
+       .live-indicator.offline i {
+         background: #f59e0b;
+         box-shadow: 0 0 0 3px rgba(245,158,11,.13);
+         animation: none;
+       }
+       .live-indicator i { flex-shrink: 0; }
+       .live-indicator .live-time { font-variant-numeric: tabular-nums; }
        .hdr .u {
          gap: .55rem;
          flex-shrink: 0;
@@ -731,7 +740,7 @@ function doOut(){session=null;ls('sb_session',null);render();}
 /* ===== الهيكل ===== */
 function appHTML(){return `
  <div class="hdr">
-   <div class="brand">${LOGO}<div class="brand-copy"><b class="en">My Sindbad</b><small>رفيق السفر</small><span class="live-indicator"><i></i><span>مباشر · <span id="liveClock">--:--</span></span></span></div></div>
+   <div class="brand">${LOGO}<div class="brand-copy"><b class="en">My Sindbad</b><small>رفيق السفر</small><span class="live-indicator" id="liveIndicator"><i></i><span id="liveStatus">متصل الآن</span><span> · </span><span class="live-time" id="liveClock">--:--</span></span></div></div>
    <div class="u"><button class="install-app" id="installApp" type="button" onclick="installApp()">تثبيت التطبيق</button><span class="user-name">${esc(session.name||'زائر')}</span><div class="av" aria-label="حساب ${esc(session.name||'زائر')}">${esc((session.name||'ز').charAt(0))}</div><button onclick="doOut()" title="تسجيل الخروج" aria-label="تسجيل الخروج">${ic('out',16)}</button></div>
  </div>
  <div class="content" id="pg"></div>
@@ -952,11 +961,19 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
  };
   let deferredInstallPrompt = null;
   let liveClockTimer = null;
-  function updateLiveHeader() {
-    const clock = $('liveClock');
-    if (!clock) return;
-    clock.textContent = new Intl.DateTimeFormat('ar-MA', { hour: '2-digit', minute: '2-digit' }).format(new Date());
-  }
+   function updateLiveHeader() {
+     const clock = $('liveClock');
+     const indicator = $('liveIndicator');
+     const status = $('liveStatus');
+     if (!clock || !indicator || !status) return;
+     const online = navigator.onLine;
+     clock.textContent = new Intl.DateTimeFormat('ar-MA', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date());
+     status.textContent = online ? 'متصل الآن' : 'غير متصل';
+     indicator.classList.toggle('offline', !online);
+     indicator.setAttribute('aria-label', online ? 'التطبيق متصل بالإنترنت' : 'التطبيق غير متصل بالإنترنت');
+   }
+   window.addEventListener('online', updateLiveHeader);
+   window.addEventListener('offline', updateLiveHeader);
   window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
     deferredInstallPrompt = event;
@@ -990,7 +1007,7 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
     setupInstallPrompt();
     updateLiveHeader();
     if (liveClockTimer) clearInterval(liveClockTimer);
-    liveClockTimer = setInterval(updateLiveHeader, 30000);
+     liveClockTimer = setInterval(updateLiveHeader, 1000);
  }
  function pgHome(P) {
    const t = lg('sb_trip', null);
