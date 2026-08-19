@@ -147,10 +147,7 @@ async function handleApi(request, response, url) {
     sendJson(response, 404, { error: 'المسار غير موجود.' });
     return true;
   } catch (error) {
-    sendJson(response, 502, {
-      error: 'تعذر الوصول إلى الخدمة الخارجية الآن.',
-      detail: error.message
-    });
+    sendJson(response, 502, { error: 'تعذر الوصول إلى الخدمة الخارجية الآن.' });
     return true;
   }
 }
@@ -178,6 +175,14 @@ const server = http.createServer((request, response) => {
     }
 
     fs.stat(file, (error, stats) => {
+      if (error || !stats.isFile()) {
+        const acceptsHtml = String(request.headers.accept || '').includes('text/html');
+        if (!acceptsHtml) {
+          response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+          response.end('Not found');
+          return;
+        }
+      }
       const target = !error && stats.isFile() ? file : path.join(root, 'index.html');
       fs.readFile(target, (readError, content) => {
         if (readError) {
