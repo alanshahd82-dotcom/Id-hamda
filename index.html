@@ -276,6 +276,11 @@ label .inp { margin-top: 0.35rem; }
 .hdr .brand-logo { width: 38px; height: 38px; display: block; object-fit: cover; border-radius: 22%; flex-shrink: 0; }
 .hdr .brand b { font-size: 1.02rem; color: var(--navy-900); display: block; line-height: 1.1; font-weight: 700; }
 .hdr .brand small { color: var(--text-muted); font-size: 0.64rem; letter-spacing: 0.5px; }
+.hdr .brand-copy { display:flex; flex-direction:column; align-items:flex-start; gap:.18rem; min-width:0; }
+.hdr .brand-copy small { letter-spacing:0; }
+.live-indicator { display:inline-flex; align-items:center; gap:.3rem; color:#15803d; font-size:.58rem; font-weight:700; white-space:nowrap; }
+.live-indicator i { width:6px; height:6px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 3px rgba(34,197,94,.13); animation:live-pulse 2s ease-in-out infinite; }
+@keyframes live-pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
 .hdr .u { display: flex; align-items: center; gap: 0.6rem; }
 .hdr .av {
   width: 34px;
@@ -657,7 +662,7 @@ function doOut(){session=null;ls('sb_session',null);render();}
 /* ===== الهيكل ===== */
 function appHTML(){return `
  <div class="hdr">
-  <div class="brand">${LOGO}<div><b class="en">My Sindbad</b><small>رفيق السفر الفاخر</small></div></div>
+   <div class="brand">${LOGO}<div class="brand-copy"><b class="en">My Sindbad</b><small>رفيق السفر</small><span class="live-indicator"><i></i><span>مباشر · <span id="liveClock">--:--</span></span></span></div></div>
    <div class="u"><button class="install-app" id="installApp" type="button" onclick="installApp()">تثبيت التطبيق</button><div class="av">${(session.name||'ز').charAt(0)}</div><button onclick="doOut()" title="تسجيل الخروج">${ic('out',16)}</button></div>
  </div>
  <div class="content" id="pg"></div>
@@ -880,6 +885,12 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
    go('explore');
  };
   let deferredInstallPrompt = null;
+  let liveClockTimer = null;
+  function updateLiveHeader() {
+    const clock = $('liveClock');
+    if (!clock) return;
+    clock.textContent = new Intl.DateTimeFormat('ar-MA', { hour: '2-digit', minute: '2-digit' }).format(new Date());
+  }
   window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
     deferredInstallPrompt = event;
@@ -911,6 +922,9 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
    const pages = { home: pgHome, explore: pgExplore, trip: pgTrip, map: pgMap, bot: pgBot };
    (pages[page] || pgHome)(P);
     setupInstallPrompt();
+    updateLiveHeader();
+    if (liveClockTimer) clearInterval(liveClockTimer);
+    liveClockTimer = setInterval(updateLiveHeader, 30000);
  }
  function pgHome(P) {
    const t = lg('sb_trip', null);
