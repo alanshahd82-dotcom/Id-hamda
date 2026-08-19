@@ -563,6 +563,12 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
     .cats{margin:0 0 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.cat{min-height:66px;background:#fff;border:1px solid var(--border);border-radius:18px;color:var(--navy-900);font-size:.66rem}.cat .ci{color:#d77725}.trip-summary{min-height:150px;border:0;border-radius:24px;padding:18px;background-image:linear-gradient(180deg,rgba(4,17,28,.08),rgba(4,17,28,.82)),url('https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=84');background-size:cover;background-position:center;color:#fff;box-shadow:0 14px 28px rgba(4,17,28,.16)}.trip-summary h2,.trip-summary p{color:#fff}.trip-summary .btn{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.36);color:#fff;backdrop-filter:blur(10px)}.empty-state{border-radius:24px;background:#fff}.bnav{background:rgba(5,17,28,.92);border-top:1px solid rgba(255,255,255,.14);backdrop-filter:blur(18px)}.bnav button{color:rgba(255,255,255,.62);border-radius:50%;font-size:.58rem}.bnav button.on{background:rgba(255,255,255,.13);color:#fff}.bnav button.on svg{color:#f09a53}
     @media(min-width:700px){.home-hero{margin:-24px -24px 24px;min-height:560px;border-radius:0 0 30px 30px}}
      .search-result{width:100%;display:flex;align-items:center;gap:.7rem;text-align:right;border:0;border-bottom:1px solid var(--border-subtle);background:none;padding:.8rem .2rem;color:var(--text-main);cursor:pointer;font-family:inherit}.search-result:last-child{border-bottom:0}.search-result .ci{width:34px;height:34px;border-radius:10px;background:var(--navy-50);color:var(--navy-800);display:grid;place-items:center;flex-shrink:0}.search-result span:nth-child(2){flex:1}.search-result b,.search-result small{display:block}.search-result b{font-size:.82rem}.search-result small{font-size:.68rem;color:var(--text-muted);margin-top:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.live-list{display:grid;gap:.7rem}.live-place{display:flex;align-items:flex-start;gap:.7rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.8rem;box-shadow:var(--shadow-sm)}.live-place>div:nth-child(2){flex:1;min-width:0}.live-place h3{font-size:.84rem;color:var(--navy-900);margin-bottom:.2rem}.live-place p{font-size:.69rem;color:var(--text-muted);line-height:1.5}.live-place a{font-size:.68rem;color:var(--gold-dark);display:inline-block;margin-top:.3rem}.place-icon{width:36px;height:36px;border-radius:12px;background:var(--navy-50);color:var(--gold-dark);display:grid;place-items:center;flex-shrink:0}.live-place .btn{flex-shrink:0}
+      .install-app{display:none;align-items:center;gap:.35rem;min-height:36px;padding:.35rem .7rem;border:1px solid var(--gold);border-radius:999px;background:var(--gold-light);color:var(--navy-900);font:600 .68rem Cairo,sans-serif;cursor:pointer}
+      .install-app.ready{display:inline-flex}
+      .app-status{display:flex;align-items:center;gap:.35rem;color:#15803d;font-size:.65rem;font-weight:700;margin-top:.7rem}
+      .app-status i{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.12)}
+      @media (display-mode: standalone){body{background:var(--bg)}.shell{max-width:520px;box-shadow:none}.install-app{display:none!important}}
+      @media (min-width:700px){body{padding:18px 0}.shell{min-height:calc(100dvh - 36px);border-radius:28px;overflow:hidden}}
       </style>
 </head>
 <body>
@@ -652,7 +658,7 @@ function doOut(){session=null;ls('sb_session',null);render();}
 function appHTML(){return `
  <div class="hdr">
   <div class="brand">${LOGO}<div><b class="en">My Sindbad</b><small>رفيق السفر الفاخر</small></div></div>
-  <div class="u"><div class="av">${(session.name||'ز').charAt(0)}</div><button onclick="doOut()" title="تسجيل الخروج">${ic('out',16)}</button></div>
+   <div class="u"><button class="install-app" id="installApp" type="button" onclick="installApp()">تثبيت التطبيق</button><div class="av">${(session.name||'ز').charAt(0)}</div><button onclick="doOut()" title="تسجيل الخروج">${ic('out',16)}</button></div>
  </div>
  <div class="content" id="pg"></div>
  <div class="foot"></div>
@@ -873,6 +879,24 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
    liveError = '';
    go('explore');
  };
+  let deferredInstallPrompt = null;
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    setupInstallPrompt();
+  });
+  function setupInstallPrompt() {
+    const button = $('installApp');
+    if (button && deferredInstallPrompt) button.classList.add('ready');
+  }
+  async function installApp() {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    const button = $('installApp');
+    if (button) button.classList.remove('ready');
+  }
   function render() {
     if (!session) {
       $('shell').innerHTML = authHTML();
@@ -886,6 +910,7 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
    if (!P) return;
    const pages = { home: pgHome, explore: pgExplore, trip: pgTrip, map: pgMap, bot: pgBot };
    (pages[page] || pgHome)(P);
+    setupInstallPrompt();
  }
  function pgHome(P) {
    const t = lg('sb_trip', null);
