@@ -573,7 +573,77 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
       .app-status{display:flex;align-items:center;gap:.35rem;color:#15803d;font-size:.65rem;font-weight:700;margin-top:.7rem}
       .app-status i{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.12)}
       @media (display-mode: standalone){body{background:var(--bg)}.shell{max-width:520px;box-shadow:none}.install-app{display:none!important}}
-      @media (min-width:700px){body{padding:18px 0}.shell{min-height:calc(100dvh - 36px);border-radius:28px;overflow:hidden}}
+       @media (min-width:700px){body{padding:18px 0}.shell{min-height:calc(100dvh - 36px);border-radius:28px;overflow:hidden}}
+       /* ترويسة الهوية — ترتيب هادئ وواضح على الهاتف والسطح */
+       .hdr {
+         min-height: 76px;
+         padding-inline: 20px;
+         background: rgba(255,255,255,.96);
+         box-shadow: 0 4px 18px rgba(11,27,51,.045);
+       }
+       .hdr .brand { gap: .75rem; min-width: 0; }
+       .hdr .brand-logo {
+         width: 48px;
+         height: 48px;
+         border: 1px solid rgba(197,168,128,.32);
+         border-radius: 15px;
+         box-shadow: 0 5px 14px rgba(11,27,51,.12);
+       }
+       .hdr .brand-copy {
+         align-items: flex-start;
+         gap: .12rem;
+       }
+       .hdr .brand b {
+         font-size: 1.28rem;
+         letter-spacing: -.02em;
+       }
+       .hdr .brand small {
+         font-size: .7rem;
+         color: var(--text-muted);
+         font-weight: 600;
+       }
+       .live-indicator {
+         margin-top: .08rem;
+         font-size: .58rem;
+         color: #147a3c;
+       }
+       .hdr .u {
+         gap: .55rem;
+         flex-shrink: 0;
+       }
+       .hdr .user-name {
+         max-width: 90px;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+         color: var(--navy-900);
+         font-size: .72rem;
+         font-weight: 700;
+       }
+       .hdr .u .av {
+         width: 42px;
+         height: 42px;
+         border: 2px solid var(--surface);
+         outline: 1px solid rgba(11,27,51,.12);
+         box-shadow: 0 3px 10px rgba(11,27,51,.12);
+       }
+       .hdr .u > button:last-child {
+         width: 44px;
+         height: 44px;
+         border: 1px solid var(--border);
+         background: var(--surface);
+         box-shadow: 0 3px 10px rgba(11,27,51,.05);
+       }
+       .hdr .u > button:last-child:hover {
+         background: var(--danger-light);
+         border-color: #fecaca;
+       }
+       @media (max-width: 380px) {
+         .hdr { padding-inline: 14px; }
+         .hdr .brand b { font-size: 1.08rem; }
+         .hdr .brand-logo { width: 42px; height: 42px; }
+         .hdr .user-name { display: none; }
+       }
       </style>
 </head>
 <body>
@@ -663,7 +733,7 @@ function doOut(){session=null;ls('sb_session',null);render();}
 function appHTML(){return `
  <div class="hdr">
    <div class="brand">${LOGO}<div class="brand-copy"><b class="en">My Sindbad</b><small>رفيق السفر</small><span class="live-indicator"><i></i><span>مباشر · <span id="liveClock">--:--</span></span></span></div></div>
-   <div class="u"><button class="install-app" id="installApp" type="button" onclick="installApp()">تثبيت التطبيق</button><div class="av">${(session.name||'ز').charAt(0)}</div><button onclick="doOut()" title="تسجيل الخروج">${ic('out',16)}</button></div>
+   <div class="u"><button class="install-app" id="installApp" type="button" onclick="installApp()">تثبيت التطبيق</button><span class="user-name">${esc(session.name||'زائر')}</span><div class="av" aria-label="حساب ${esc(session.name||'زائر')}">${esc((session.name||'ز').charAt(0))}</div><button onclick="doOut()" title="تسجيل الخروج" aria-label="تسجيل الخروج">${ic('out',16)}</button></div>
  </div>
  <div class="content" id="pg"></div>
  <div class="foot"></div>
