@@ -14,103 +14,500 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0B1D3A;--blue:#0E3A6D;--gold:#D4AF37;--gold-d:#b8952c;--cream:#F8F4EC;--gray:#E6E8EC;--text:#1c2b45;--muted:#6b7a93}
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',Tahoma,sans-serif}
-body{background:#081426}
-.hidden{display:none!important}
-.en{font-family:'Playfair Display',serif}
-.shell{max-width:460px;margin:0 auto;min-height:100vh;background:var(--cream);position:relative;padding-bottom:76px;box-shadow:0 0 80px rgba(0,0,0,.6)}
-.inp{width:100%;padding:.6rem .9rem;border:1.5px solid #ddd6c8;border-radius:10px;font-size:.88rem;background:#fff;color:var(--text)}
-.inp:focus{outline:none;border-color:var(--gold)}
-label{display:block;font-size:.75rem;color:var(--muted);font-weight:600;margin-bottom:.7rem}
-label .inp{margin-top:.25rem}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:.65rem 1.2rem;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit}
-.btn:active{transform:scale(.98)}
-.btn.navy{background:var(--blue);color:#fff}
-.btn.ghost{background:#fff;border:1.5px solid #ddd6c8;color:var(--text)}
-.btn.sm{padding:.35rem .8rem;font-size:.75rem;border-radius:8px}
-.btn.w{width:100%}
+:root {
+  --navy-900: #0a192f;
+  --navy-800: #0f2744;
+  --navy-700: #1a365d;
+  --navy-50: #f0f4f8;
+  --gold: #c5a059;
+  --gold-d: #a8843c;
+  --gold-light: rgba(197, 160, 89, 0.12);
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --border: #e9ecef;
+  --border-subtle: #f1f3f5;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --danger: #dc2626;
+  --danger-light: #fee2e2;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', system-ui, -apple-system, sans-serif; }
+body { background: #060d1a; color: var(--text-main); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.hidden { display: none !important; }
+.en { font-family: 'Playfair Display', Georgia, serif; }
+
+/* الهيكل الخارجي PWA Shell */
+.shell {
+  max-width: 440px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+  padding-bottom: 74px;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+
+.content { padding: 1.1rem 1rem; flex: 1; }
+
+/* حقول الإدخال */
+.inp {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  background: var(--surface);
+  color: var(--text-main);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.inp:focus {
+  outline: none;
+  border-color: var(--navy-700);
+  box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.08);
+}
+label {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+label .inp { margin-top: 0.35rem; }
+
+/* الأزرار */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: var(--navy-800);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1.2rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, transform 0.1s, opacity 0.2s;
+  text-decoration: none;
+}
+.btn:active { transform: scale(0.98); }
+.btn.navy { background: var(--navy-800); color: #fff; }
+.btn.navy:hover { background: var(--navy-900); }
+.btn.ghost {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+}
+.btn.ghost:hover { background: var(--border-subtle); }
+.btn.sm { padding: 0.35rem 0.75rem; font-size: 0.76rem; border-radius: var(--radius-sm); }
+.btn.w { width: 100%; }
+
+/* عناوين الأقسام والبطاقات */
+.sec {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--navy-900);
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin: 1.3rem 0 0.75rem;
+}
+.sec::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 0.85rem;
+  box-shadow: var(--shadow-sm);
+}
+
 /* شاشة الدخول */
-.auth{min-height:100vh;background:linear-gradient(170deg,var(--navy) 20%,var(--blue));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.4rem;text-align:center}
-.auth .logo{width:90px;height:90px;margin-bottom:.6rem}
-.auth h1{font-size:2rem;color:var(--gold);margin-bottom:.1rem}
-.auth .tag{color:#bcd0e8;font-size:.8rem;letter-spacing:2px;margin-bottom:1.4rem}
-.auth-card{background:#fff;color:var(--text);border-radius:16px;padding:1.4rem;width:100%;max-width:340px;text-align:right;box-shadow:0 20px 50px rgba(0,0,0,.35)}
-.auth-card .tabs{display:flex;background:#f1ede2;border-radius:10px;padding:4px;margin-bottom:1rem}
-.auth-card .tabs button{flex:1;border:none;background:none;padding:.5rem;border-radius:8px;font-weight:700;font-size:.82rem;color:var(--muted);cursor:pointer;font-family:inherit}
-.auth-card .tabs button.on{background:var(--navy);color:var(--gold)}
-.auth-card .err{color:#c0392b;font-size:.75rem;min-height:1.1rem;margin:.2rem 0}
-.auth-card .free{margin-top:.8rem;background:#eaf7ec;color:#1e7e34;border-radius:8px;padding:.45rem;font-size:.72rem;font-weight:700;text-align:center}
-.auth .feat{display:flex;gap:.5rem;margin-top:1.3rem;flex-wrap:wrap;justify-content:center}
-.auth .feat span{border:1px solid rgba(212,175,55,.4);color:var(--gold);border-radius:99px;padding:.25rem .8rem;font-size:.68rem}
-/* الهيدر */
-.hdr{background:linear-gradient(160deg,var(--navy),var(--blue));color:#fff;padding:.8rem 1rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
-.hdr .brand{display:flex;align-items:center;gap:.6rem}
-.hdr .brand svg{width:34px;height:34px}
-.hdr .brand b{font-size:1.05rem;color:var(--gold);display:block;line-height:1.1}
-.hdr .brand small{color:#bcd0e8;font-size:.62rem;letter-spacing:1.5px}
-.hdr .u{display:flex;align-items:center;gap:.5rem}
-.hdr .av{width:32px;height:32px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem}
-.hdr button{background:none;border:none;color:#bcd0e8;cursor:pointer;padding:.2rem}
-.content{padding:1rem}
-.sec{display:flex;align-items:center;gap:.5rem;color:var(--navy);font-weight:900;font-size:.95rem;margin:1rem 0 .6rem}
-.sec::after{content:'';flex:1;height:1px;background:#ddd6c8}
-.card{background:#fff;border-radius:14px;padding:.95rem;margin-bottom:.8rem;box-shadow:0 2px 10px rgba(11,29,58,.07)}
-.hero{background:linear-gradient(150deg,var(--navy),var(--blue));color:#fff;border-radius:16px;padding:1.1rem;margin-bottom:.9rem;position:relative;overflow:hidden}
-.hero h2{font-size:1.15rem;margin-bottom:.2rem}
-.hero p{color:#bcd0e8;font-size:.75rem;margin-bottom:.8rem}
-.hero .search{display:flex;gap:.4rem}
-.hero .search .inp{border:none}
-.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:.9rem}
-.cat{background:#fff;border:none;border-radius:12px;padding:.7rem .3rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;font-size:.66rem;font-weight:700;color:var(--navy);cursor:pointer;box-shadow:0 2px 10px rgba(11,29,58,.07);font-family:inherit}
-.cat .ci{width:38px;height:38px;border-radius:12px;background:var(--navy);color:var(--gold);display:flex;align-items:center;justify-content:center}
-.dest{display:flex;gap:.7rem;align-items:center;background:#fff;border-radius:14px;padding:.6rem;margin-bottom:.6rem;box-shadow:0 2px 10px rgba(11,29,58,.07)}
-.dest .ph{width:64px;height:64px;border-radius:12px;background:linear-gradient(140deg,var(--blue),var(--navy));color:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.dest b{font-size:.85rem;display:block}
-.dest small{color:var(--muted);font-size:.7rem}
-.row{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.3rem}
-.chip{border:1.5px solid #ddd6c8;background:#fff;border-radius:99px;padding:.35rem .9rem;font-size:.72rem;font-weight:700;color:var(--muted);cursor:pointer;white-space:nowrap;font-family:inherit}
-.chip.on{background:var(--navy);border-color:var(--navy);color:var(--gold)}
-.item{display:flex;gap:.7rem;background:#fff;border-radius:14px;padding:.75rem;margin-bottom:.6rem;box-shadow:0 2px 10px rgba(11,29,58,.07);align-items:center}
-.item .ic{width:42px;height:42px;border-radius:12px;background:var(--cream);color:var(--gold-d);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.item b{font-size:.84rem;display:block}
-.item small{color:var(--muted);font-size:.68rem}
-.item .end{margin-right:auto;text-align:left}
-.stars{color:var(--gold);font-size:.72rem}
-.price{color:var(--blue);font-weight:900;font-size:.85rem}
-.timeline{border-right:2px solid var(--gold);padding-right:1rem;margin:.6rem 0}
-.tl{position:relative;margin-bottom:.7rem}
-.tl::before{content:'';position:absolute;right:-1.35rem;top:.35rem;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--cream)}
-.tl b{font-size:.8rem}
-.tl small{color:var(--muted);display:block;font-size:.7rem}
-.tl .del{float:left;background:none;border:none;color:#c0392b;cursor:pointer}
-.day-h{background:var(--navy);color:var(--gold);border-radius:10px;padding:.4rem .8rem;font-size:.78rem;font-weight:700;margin:.8rem 0 .6rem;display:inline-block}
-.check{display:flex;align-items:center;gap:.6rem;padding:.45rem 0;border-bottom:1px dashed #e5dfcf;font-size:.82rem}
-.check input{accent-color:var(--gold);width:17px;height:17px}
-.check .done{text-decoration:line-through;color:var(--muted)}
-.prog{height:7px;background:#eee7d6;border-radius:99px;overflow:hidden;margin:.5rem 0}
-.prog i{display:block;height:100%;background:var(--gold)}
-iframe.map{width:100%;height:260px;border:none;border-radius:14px}
-.tools{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
-.wth b{font-size:1.6rem;color:var(--blue)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
-.post{background:#fff;border-radius:14px;overflow:hidden;margin-bottom:.8rem;box-shadow:0 2px 10px rgba(11,29,58,.07)}
-.post img{width:100%;height:170px;object-fit:cover;display:block}
-.post .noimg{height:120px;background:linear-gradient(140deg,var(--blue),var(--navy));display:flex;align-items:center;justify-content:center;color:var(--gold)}
-.post .pb{padding:.7rem .8rem}
-.post .pb p{font-size:.8rem;margin-bottom:.4rem}
-.post .pm{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.7rem}
-.post .like{display:flex;align-items:center;gap:.3rem;background:none;border:none;color:#c0392b;cursor:pointer;font-family:inherit;font-size:.72rem;font-weight:700}
-.chat{background:#fff;border-radius:14px;padding:.8rem;height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem;margin-bottom:.6rem}
-.msg{max-width:85%;padding:.55rem .8rem;border-radius:12px;font-size:.8rem;line-height:1.7;white-space:pre-line}
-.msg.bot{background:var(--cream);color:var(--text);align-self:flex-start;border-bottom-right-radius:4px}
-.msg.me{background:var(--blue);color:#fff;align-self:flex-end;border-bottom-left-radius:4px}
-.sugs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem}
-/* الشريط السفلي */
-.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;background:var(--navy);display:flex;z-index:6;border-top:1px solid rgba(212,175,55,.25)}
-.bnav button{flex:1;background:none;border:none;color:#7d90ad;padding:.55rem 0 .6rem;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.6rem;font-weight:700;cursor:pointer;font-family:inherit}
-.bnav button.on{color:var(--gold)}
-.foot{text-align:center;color:var(--muted);font-size:.65rem;padding:1rem 0 .5rem}
+.auth {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--navy-900) 0%, var(--navy-800) 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.2rem 1.4rem;
+  text-align: center;
+}
+.auth .logo { width: 76px; height: 76px; margin-bottom: 0.8rem; }
+.auth h1 { font-size: 1.85rem; color: #ffffff; letter-spacing: 0.5px; margin-bottom: 0.15rem; }
+.auth .tag { color: var(--gold); font-size: 0.72rem; letter-spacing: 2px; font-weight: 600; margin-bottom: 1.6rem; }
+.auth-card {
+  background: var(--surface);
+  color: var(--text-main);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.25rem;
+  width: 100%;
+  max-width: 340px;
+  text-align: right;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+.auth-card .tabs {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  margin-bottom: 1.1rem;
+}
+.auth-card .tabs button {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s;
+}
+.auth-card .tabs button.on { background: var(--surface); color: var(--navy-900); font-weight: 700; box-shadow: var(--shadow-sm); }
+.auth-card .err { color: var(--danger); font-size: 0.75rem; min-height: 1.2rem; margin: 0.25rem 0; }
+.auth-card .free {
+  margin-top: 0.9rem;
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-align: center;
+}
+.auth .feat { display: flex; gap: 0.5rem; margin-top: 1.5rem; flex-wrap: wrap; justify-content: center; }
+.auth .feat span {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  border-radius: var(--radius-full);
+  padding: 0.3rem 0.85rem;
+  font-size: 0.7rem;
+}
+
+/* الهيدر العلوي */
+.hdr {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.hdr .brand { display: flex; align-items: center; gap: 0.65rem; }
+.hdr .brand svg { width: 30px; height: 30px; }
+.hdr .brand b { font-size: 1.02rem; color: var(--navy-900); display: block; line-height: 1.1; font-weight: 700; }
+.hdr .brand small { color: var(--text-muted); font-size: 0.64rem; letter-spacing: 0.5px; }
+.hdr .u { display: flex; align-items: center; gap: 0.6rem; }
+.hdr .av {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--navy-50);
+  border: 1px solid var(--border);
+  color: var(--navy-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.hdr button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.3rem;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s;
+}
+.hdr button:hover { color: var(--danger); background: var(--danger-light); }
+
+/* الصفحة الرئيسية — ترويسة وبحث خفيف ومندمج */
+.home-hero { margin-bottom: 1.2rem; padding: 0.2rem 0; }
+.home-hero .greeting { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-bottom: 0.2rem; display: block; }
+.home-hero h2 { font-size: 1.35rem; color: var(--navy-900); font-weight: 800; line-height: 1.3; margin-bottom: 0.85rem; }
+.home-search {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.35rem 0.45rem 0.35rem 0.85rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s;
+}
+.home-search:focus-within { border-color: var(--navy-700); }
+.home-search .inp { border: none; padding: 0.45rem 0; font-size: 0.86rem; flex: 1; }
+.home-search .inp:focus { box-shadow: none; }
+.home-search .btn { padding: 0.5rem 0.9rem; }
+
+/* تصنيفات سريعة */
+.cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.55rem; margin-bottom: 1.1rem; }
+.cat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--navy-900);
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, background 0.2s;
+}
+.cat:hover { border-color: var(--navy-700); background: var(--navy-50); }
+.cat .ci {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--navy-50);
+  color: var(--navy-800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.cat:hover .ci { background: var(--navy-800); color: #fff; }
+
+/* قائمة الوجهات */
+.dest {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  margin-bottom: 0.6rem;
+  box-shadow: var(--shadow-sm);
+}
+.dest .ph {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--navy-50);
+  color: var(--navy-800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.dest b { font-size: 0.9rem; color: var(--navy-900); display: block; margin-bottom: 0.15rem; }
+.dest small { color: var(--text-muted); font-size: 0.72rem; }
+
+/* الشرائح والكبسولات */
+.row { display: flex; gap: 0.45rem; overflow-x: auto; padding-bottom: 0.35rem; scrollbar-width: none; }
+.row::-webkit-scrollbar { display: none; }
+.chip {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-full);
+  padding: 0.4rem 0.95rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.chip:hover { border-color: var(--navy-700); color: var(--navy-900); }
+.chip.on {
+  background: var(--navy-800);
+  border-color: var(--navy-800);
+  color: #ffffff;
+}
+
+/* بطاقات الاستكشاف */
+.item {
+  display: flex;
+  gap: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  margin-bottom: 0.6rem;
+  box-shadow: var(--shadow-sm);
+  align-items: center;
+}
+.item .ic {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--navy-50);
+  color: var(--navy-800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.item b { font-size: 0.88rem; color: var(--navy-900); display: block; margin-bottom: 0.15rem; }
+.item small { color: var(--text-muted); font-size: 0.72rem; }
+.item .end { margin-right: auto; text-align: left; }
+.stars { color: var(--gold); font-size: 0.76rem; font-weight: 700; }
+.price { color: var(--navy-900); font-weight: 800; font-size: 0.92rem; }
+
+/* خط الرحلة والتجهيز */
+.trip-summary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+}
+.trip-summary h2 { font-size: 1.05rem; color: var(--navy-900); font-weight: 700; margin-bottom: 0.2rem; }
+.trip-summary p { color: var(--text-muted); font-size: 0.76rem; }
+.timeline { border-right: 2px solid var(--border); padding-right: 0.9rem; margin: 0.5rem 0.5rem 0.9rem 0; }
+.tl { position: relative; margin-bottom: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; }
+.tl::before {
+  content: '';
+  position: absolute;
+  right: -1.25rem;
+  top: 0.75rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--surface);
+}
+.tl b { font-size: 0.84rem; color: var(--navy-900); }
+.tl small { color: var(--text-muted); display: block; font-size: 0.72rem; margin-top: 0.15rem; }
+.tl .del { float: left; background: none; border: none; color: var(--text-light); cursor: pointer; padding: 0.2rem; }
+.tl .del:hover { color: var(--danger); }
+.day-h {
+  background: var(--navy-50);
+  color: var(--navy-900);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  margin: 0.7rem 0 0.5rem;
+  display: inline-block;
+}
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.84rem;
+}
+.check input { accent-color: var(--navy-800); width: 16px; height: 16px; cursor: pointer; }
+.check .done { text-decoration: line-through; color: var(--text-light); }
+.prog { height: 6px; background: var(--border); border-radius: var(--radius-full); overflow: hidden; margin: 0.5rem 0 0.8rem; }
+.prog i { display: block; height: 100%; background: var(--gold); border-radius: var(--radius-full); transition: width 0.3s; }
+
+/* الخريطة والأدوات */
+iframe.map { width: 100%; height: 240px; border: 1px solid var(--border); border-radius: var(--radius-md); }
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 0.65rem; }
+.wth b { font-size: 1.5rem; color: var(--navy-900); font-weight: 800; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+
+/* المجتمع */
+.post { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 0.85rem; box-shadow: var(--shadow-sm); }
+.post img { width: 100%; height: 170px; object-fit: cover; display: block; }
+.post .noimg { height: 110px; background: var(--navy-50); display: flex; align-items: center; justify-content: center; color: var(--text-light); }
+.post .pb { padding: 0.75rem 0.85rem; }
+.post .pb p { font-size: 0.82rem; color: var(--text-main); margin-bottom: 0.45rem; line-height: 1.5; }
+.post .pm { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.72rem; }
+.post .like { display: flex; align-items: center; gap: 0.3rem; background: none; border: none; color: var(--danger); cursor: pointer; font-family: inherit; font-size: 0.74rem; font-weight: 700; padding: 0.2rem 0; }
+
+/* المحادثة */
+.chat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 0.65rem;
+}
+.msg { max-width: 82%; padding: 0.6rem 0.85rem; border-radius: var(--radius-md); font-size: 0.82rem; line-height: 1.6; white-space: pre-line; }
+.msg.bot { background: var(--bg); color: var(--text-main); align-self: flex-start; border-bottom-right-radius: 2px; border: 1px solid var(--border-subtle); }
+.msg.me { background: var(--navy-800); color: #ffffff; align-self: flex-end; border-bottom-left-radius: 2px; }
+.sugs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.65rem; }
+
+/* شريط التنقل السفلي */
+.bnav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface);
+  display: flex;
+  z-index: 30;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+  padding: 0.35rem 0 0.45rem;
+}
+.bnav button {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 0.35rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.64rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  position: relative;
+  transition: color 0.2s;
+}
+.bnav button.on { color: var(--navy-900); font-weight: 700; }
+.bnav button.on::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.foot { text-align: center; color: var(--text-light); font-size: 0.68rem; padding: 1.2rem 0 0.5rem; }
 </style>
 </head>
 <body>
@@ -174,8 +571,8 @@ function authHTML(){return `
    <label>البريد الإلكتروني<input class="inp" id="aEmail" type="email"></label>
    <label>كلمة المرور<input class="inp" id="aPass" type="password"></label>
    <div class="err" id="aErr"></div>
-   <button class="btn w" onclick="${authTab==='reg'?'doReg()':'doLogin()'}">${authTab==='reg'?'إنشاء حساب مجاني':'دخول'}</button>
-   <button class="btn ghost w" style="margin-top:.5rem" onclick="session={name:'زائر',guest:1};ls('sb_session',session);render()">المتابعة كزائر</button>
+   <button class="btn navy w" onclick="${authTab==='reg'?'doReg()':'doLogin()'}">${authTab==='reg'?'إنشاء حساب مجاني':'تسجيل الدخول'}</button>
+   <button class="btn ghost w" style="margin-top:.6rem" onclick="session={name:'زائر',guest:1};ls('sb_session',session);render()">المتابعة كزائر</button>
    <div class="free">التسجيل مجاني 100% — بدون أي رسوم</div>
   </div>
   <div class="feat"><span>تخطيط رحلات ذكي</span><span>خرائط وتوجيهات</span><span>مجتمع المسافرين</span></div>
@@ -192,54 +589,70 @@ function doOut(){session=null;ls('sb_session',null);render();}
 function appHTML(){return `
  <div class="hdr">
   <div class="brand">${LOGO}<div><b class="en">My Sindbad</b><small>مساعدك الذكي للسفر</small></div></div>
-  <div class="u"><div class="av">${(session.name||'ز').charAt(0)}</div><button onclick="doOut()" title="خروج">${ic('out',17)}</button></div>
+  <div class="u"><div class="av">${(session.name||'ز').charAt(0)}</div><button onclick="doOut()" title="تسجيل الخروج">${ic('out',16)}</button></div>
  </div>
  <div class="content" id="pg"></div>
- <div class="foot">My Sindbad — النسخة التجريبية 1.0</div>
- <div class="bnav">${NAVB.map(n=>`<button class="${n.id===page?'on':''}" onclick="go('${n.id}')">${ic(n.i,19)}${n.t}</button>`).join('')}</div>`;}
+ <div class="foot">My Sindbad — مساعدك الذكي للسفر</div>
+ <div class="bnav">${NAVB.map(n=>`<button class="${n.id===page?'on':''}" onclick="go('${n.id}')">${ic(n.i,18)}<span>${n.t}</span></button>`).join('')}</div>`;}
 function go(p){page=p;render();}
 function bind(){const P=$('pg');if(!P)return;({home:pgHome,trip:pgTrip,explore:pgExplore,map:pgMap,community:pgCommunity,bot:pgBot})[page](P);}
-const cityChips=()=>`<div class="row" style="margin-bottom:.8rem">${Object.keys(CITIES).map(c=>`<button class="chip ${c===city?'on':''}" onclick="city='${c}';render()">${CITIES[c].n}</button>`).join('')}</div>`;
+const cityChips=()=>`<div class="row" style="margin-bottom:.85rem">${Object.keys(CITIES).map(c=>`<button class="chip ${c===city?'on':''}" onclick="city='${c}';render()">${CITIES[c].n}</button>`).join('')}</div>`;
 
 /* ===== الصفحات ===== */
 function pgHome(P){const C=CITIES[city];
- P.innerHTML=`<div class="hero"><h2>مرحباً ${session.name}!</h2><p>إلى أين تريد الذهاب اليوم؟</p>
-  <div class="search"><input class="inp" id="q" placeholder="ابحث عن مدينة..."><button class="btn" onclick="doSearch()">${ic('nav',16)}</button></div></div>
+ P.innerHTML=`
+  <div class="home-hero">
+   <span class="greeting">مرحباً ${session.name} 👋</span>
+   <h2>إلى أين وجهتك القادمة؟</h2>
+   <div class="home-search">
+    <input class="inp" id="q" placeholder="ابحث عن مدينة (إسطنبول، مراكش...)" onkeydown="if(event.key==='Enter')doSearch()">
+    <button class="btn navy sm" onclick="doSearch()">${ic('nav',14)} بحث</button>
+   </div>
+  </div>
   <div class="cats">
-   <button class="cat" onclick="tab='hotels';go('explore')"><span class="ci">${ic('hotel')}</span>الفنادق</button>
-   <button class="cat" onclick="tab='rest';go('explore')"><span class="ci">${ic('food')}</span>المطاعم</button>
-   <button class="cat" onclick="tab='spots';go('explore')"><span class="ci">${ic('pin')}</span>الأماكن</button>
-   <button class="cat" onclick="go('trip')"><span class="ci">${ic('cal')}</span>رحلاتي</button>
+   <button class="cat" onclick="tab='hotels';go('explore')"><span class="ci">${ic('hotel',18)}</span>الفنادق</button>
+   <button class="cat" onclick="tab='rest';go('explore')"><span class="ci">${ic('food',18)}</span>المطاعم</button>
+   <button class="cat" onclick="tab='spots';go('explore')"><span class="ci">${ic('pin',18)}</span>الأماكن</button>
+   <button class="cat" onclick="go('trip')"><span class="ci">${ic('cal',18)}</span>رحلاتي</button>
   </div>
   <div class="sec">وجهات مقترحة</div>
-  ${Object.keys(CITIES).slice(0,4).map(c=>`<div class="dest"><div class="ph">${ic('pin',22)}</div><div style="flex:1"><b>${CITIES[c].n} — ${CITIES[c].c}</b><small>${CITIES[c].spots.length} أماكن سياحية • ${CITIES[c].hotels.length} فنادق</small></div><button class="btn sm" onclick="city='${c}';go('explore')">اكتشف</button></div>`).join('')}
+  ${Object.keys(CITIES).slice(0,4).map(c=>`<div class="dest"><div class="ph">${ic('pin',20)}</div><div style="flex:1"><b>${CITIES[c].n} — ${CITIES[c].c}</b><small>${CITIES[c].spots.length} معالم • ${CITIES[c].hotels.length} فنادق</small></div><button class="btn sm ghost" onclick="city='${c}';go('explore')">اكتشف</button></div>`).join('')}
   <div class="sec">مجتمع المسافرين</div>
-  <div class="card" style="display:flex;gap:.7rem;align-items:center">${ic('cam',26)}<div style="flex:1;font-size:.78rem;color:var(--muted)">شارك صورة من رحلتك الأخيرة مع باقي المسافرين</div><button class="btn sm navy" onclick="go('community')">شارك الآن</button></div>`;}
+  <div class="card" style="display:flex;gap:.75rem;align-items:center">${ic('cam',22)}<div style="flex:1;font-size:.78rem;color:var(--text-muted)">شارك صورة من رحلتك الأخيرة مع باقي المسافرين</div><button class="btn sm navy" onclick="go('community')">شارك الآن</button></div>`;}
 function doSearch(){const q=$('q').value.trim();const k=Object.keys(CITIES).find(c=>CITIES[c].n.includes(q)||CITIES[c].c.includes(q));if(k)city=k;go('explore');}
 
 function pgTrip(P){let t=lg('sb_trip',null);
  if(!t){P.innerHTML=`<div class="sec">تخطيط رحلة جديدة</div>
   <div class="card"><label>الوجهة<select class="inp" id="tCity">${Object.keys(CITIES).map(c=>`<option value="${c}">${CITIES[c].n}</option>`).join('')}</select></label>
-  <label>تاريخ الذهاب<input class="inp" type="date" id="tFrom" value="2026-09-01"></label>
-  <label>تاريخ العودة<input class="inp" type="date" id="tTo" value="2026-09-03"></label>
-  <button class="btn w" onclick="mkTrip()">${ic('plane',16)} إنشاء خطة الرحلة</button></div>`;return;}
+  <div class="grid2">
+   <label>تاريخ الذهاب<input class="inp" type="date" id="tFrom" value="2026-09-01"></label>
+   <label>تاريخ العودة<input class="inp" type="date" id="tTo" value="2026-09-03"></label>
+  </div>
+  <button class="btn navy w" style="margin-top:.4rem" onclick="mkTrip()">${ic('plane',16)} إنشاء خطة الرحلة</button></div>`;return;}
  const days=Math.min(7,Math.max(1,Math.round((new Date(t.to)-new Date(t.from))/864e5)+1));
  while(t.days.length<days)t.days.push([]);
- P.innerHTML=`<div class="hero" style="display:flex;justify-content:space-between;align-items:center"><div><h2>رحلتك إلى ${CITIES[t.city].n}</h2><p>${t.from} ← ${t.to} • ${days} أيام</p></div><button class="btn sm ghost" onclick="if(confirm('حذف الرحلة؟')){ls('sb_trip',null);render()}">${ic('trash',15)}</button></div>
-  <div class="sec">خطة الرحلة</div>
+ P.innerHTML=`
+  <div class="trip-summary">
+   <div><h2>رحلتك إلى ${CITIES[t.city].n}</h2><p>${t.from} ← ${t.to} • ${days} أيام</p></div>
+   <button class="btn sm ghost" onclick="if(confirm('حذف الرحلة؟')){ls('sb_trip',null);render()}" title="حذف الرحلة">${ic('trash',14)}</button>
+  </div>
+  <div class="sec">خطة الأيام</div>
   ${Array.from({length:days},(_,d)=>`<div class="day-h">اليوم ${d+1}</div><div class="timeline">
-   ${t.days[d].map((it,ix)=>`<div class="tl"><button class="del" onclick="delItem(${d},${ix})">${ic('trash',13)}</button><b>${it.title}</b><small>${it.time} • ${it.type}</small></div>`).join('')||'<small style="color:var(--muted)">لا أنشطة بعد</small>'}
+   ${t.days[d].map((it,ix)=>`<div class="tl"><button class="del" onclick="delItem(${d},${ix})">${ic('trash',13)}</button><b>${it.title}</b><small>${it.time} • ${it.type}</small></div>`).join('')||'<small style="color:var(--text-muted);display:block;padding:.4rem 0">لا توجد أنشطة بعد</small>'}
   </div>`).join('')}
   <div class="card"><div class="sec" style="margin-top:0">إضافة نشاط</div>
    <div class="grid2"><label>اليوم<select class="inp" id="iDay">${Array.from({length:days},(_,d)=>`<option value="${d}">اليوم ${d+1}</option>`).join('')}</select></label>
    <label>الوقت<input class="inp" type="time" id="iTime" value="10:00"></label></div>
    <label>النشاط<input class="inp" id="iTitle" placeholder="مثال: زيارة آيا صوفيا"></label>
-   <label>النوع<select class="inp" id="iType"><option>تنقل</option><option>معلم سياحي</option><option>مطعم</option><option>فندق</option><option>تسوق</option></select></label>
-   <button class="btn w" onclick="addItem()">${ic('plus',16)} إضافة</button></div>
+   <label>النوع<select class="inp" id="iType"><option>معلم سياحي</option><option>تنقل</option><option>مطعم</option><option>فندق</option><option>تسوق</option></select></label>
+   <button class="btn navy w" onclick="addItem()">${ic('plus',16)} إضافة النشاط</button></div>
   <div class="sec">قائمة الحاجيات</div>
-  <div class="card"><div class="prog"><i style="width:${Math.round(t.check.filter(c=>c.done).length/t.check.length*100)}%"></i></div>
+  <div class="card">
+   <div style="display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--text-muted)"><span>نسبة الجاهزية</span><b>${Math.round(t.check.filter(c=>c.done).length/t.check.length*100)}%</b></div>
+   <div class="prog"><i style="width:${Math.round(t.check.filter(c=>c.done).length/t.check.length*100)}%"></i></div>
    ${t.check.map((c,ix)=>`<div class="check"><input type="checkbox" ${c.done?'checked':''} onchange="togCheck(${ix})"><span class="${c.done?'done':''}">${c.t}</span></div>`).join('')}
-   <div style="display:flex;gap:.4rem;margin-top:.7rem"><input class="inp" id="newCh" placeholder="حاجة جديدة..."><button class="btn sm" onclick="addCheck()">${ic('plus',14)}</button></div></div>`;}
+   <div style="display:flex;gap:.45rem;margin-top:.85rem"><input class="inp" id="newCh" placeholder="حاجة جديدة..."><button class="btn sm navy" onclick="addCheck()">${ic('plus',14)} إضافة</button></div>
+  </div>`;}
 function mkTrip(){const from=$('tFrom').value,to=$('tTo').value;
  if(new Date(to)<new Date(from)){alert('تاريخ العودة قبل الذهاب!');return;}
  ls('sb_trip',{city:$('tCity').value,from,to,days:[],check:['جواز السفر','تذاكر السفر','حجز الفندق','تأمين السفر','شاحن الهاتف','أدوية شخصية'].map(t=>({t,done:false}))});render();}
@@ -250,46 +663,56 @@ function togCheck(ix){const t=lg('sb_trip',null);t.check[ix].done=!t.check[ix].d
 function addCheck(){const v=$('newCh').value.trim();if(!v)return;const t=lg('sb_trip',null);t.check.push({t:v,done:false});ls('sb_trip',t);render();}
 
 function pgExplore(P){const C=CITIES[city];
- const lists={hotels:C.hotels.map(h=>`<div class="item"><div class="ic">${ic('hotel',20)}</div><div><b>${h.n}</b><span class="stars">★ ${h.r}</span></div><div class="end"><div class="price">$${h.p}</div><small>لليلة</small></div></div>`).join(''),
- rest:C.rest.map(r=>`<div class="item"><div class="ic">${ic('food',20)}</div><div><b>${r.n}</b><small>${r.t}</small></div><div class="end"><a class="btn sm ghost" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.n+' '+C.n)}">اتجاهات</a></div></div>`).join(''),
- spots:C.spots.map(s=>`<div class="item"><div class="ic">${ic('pin',20)}</div><div><b>${s.n}</b><small>${s.d}</small></div><div class="end"><a class="btn sm ghost" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.n+' '+C.n)}">اتجاهات</a></div></div>`).join('')};
- P.innerHTML=`<div class="sec">استكشف ${C.n}</div>${cityChips()}
-  <div class="row" style="margin-bottom:.8rem">
+ const lists={
+  hotels:C.hotels.map(h=>`<div class="item"><div class="ic">${ic('hotel',18)}</div><div><b>${h.n}</b><span class="stars">★ ${h.r}</span></div><div class="end"><div class="price">$${h.p}</div><small>لليلة</small></div></div>`).join(''),
+  rest:C.rest.map(r=>`<div class="item"><div class="ic">${ic('food',18)}</div><div><b>${r.n}</b><small>${r.t}</small></div><div class="end"><a class="btn sm ghost" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.n+' '+C.n)}">اتجاهات</a></div></div>`).join(''),
+  spots:C.spots.map(s=>`<div class="item"><div class="ic">${ic('pin',18)}</div><div><b>${s.n}</b><small>${s.d}</small></div><div class="end"><a class="btn sm ghost" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.n+' '+C.n)}">اتجاهات</a></div></div>`).join('')
+ };
+ P.innerHTML=`
+  <div class="sec">استكشف ${C.n}</div>
+  ${cityChips()}
+  <div class="row" style="margin-bottom:.85rem">
    <button class="chip ${tab==='hotels'?'on':''}" onclick="tab='hotels';render()">الفنادق</button>
    <button class="chip ${tab==='rest'?'on':''}" onclick="tab='rest';render()">المطاعم</button>
    <button class="chip ${tab==='spots'?'on':''}" onclick="tab='spots';render()">الأماكن السياحية</button>
-  </div>${lists[tab]}`;}
+  </div>
+  ${lists[tab]}`;}
 
 function pgMap(P){const C=CITIES[city];
- P.innerHTML=`<div class="sec">الخريطة — ${C.n}</div>${cityChips()}
+ P.innerHTML=`
+  <div class="sec">الخريطة والأدوات — ${C.n}</div>
+  ${cityChips()}
   <iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=${C.lon-.08}%2C${C.lat-.05}%2C${C.lon+.08}%2C${C.lat+.05}&layer=mapnik&marker=${C.lat}%2C${C.lon}"></iframe>
-  <div style="margin:.6rem 0"><a class="btn sm navy" target="_blank" href="https://www.google.com/maps/@${C.lat},${C.lon},13z">فتح في خرائط جوجل</a></div>
+  <div style="margin:.65rem 0"><a class="btn sm ghost w" target="_blank" href="https://www.google.com/maps/@${C.lat},${C.lon},13z">${ic('map',15)} فتح في خرائط جوجل</a></div>
   <div class="tools">
-   <div class="card wth" style="margin:0"><div class="sec" style="margin:0 0 .4rem">الطقس الآن</div><div id="wBox" style="font-size:.75rem;color:var(--muted)">جارِ التحميل...</div></div>
-   <div class="card" style="margin:0"><div class="sec" style="margin:0 0 .4rem">تحويل العملات</div>
-    <input class="inp" type="number" id="cvA" value="100" oninput="doCv()" style="margin-bottom:.4rem">
+   <div class="card" style="margin:0"><div class="sec" style="margin:0 0 .45rem">الطقس الآن</div><div id="wBox" style="font-size:.76rem;color:var(--text-muted)">جارِ التحميل...</div></div>
+   <div class="card" style="margin:0"><div class="sec" style="margin:0 0 .45rem">تحويل العملات</div>
+    <input class="inp" type="number" id="cvA" value="100" oninput="doCv()" style="margin-bottom:.45rem">
     <div class="grid2"><select class="inp" id="cvF" onchange="doCv()">${Object.keys(RATES).map(r=>`<option ${r==='MAD'?'selected':''}>${r}</option>`).join('')}</select>
     <select class="inp" id="cvT" onchange="doCv()">${Object.keys(RATES).map(r=>`<option ${r==='TRY'?'selected':''}>${r}</option>`).join('')}</select></div>
-    <div id="cvR" style="font-weight:900;color:var(--blue);margin-top:.4rem;font-size:.9rem"></div>
-    <small style="color:var(--muted);font-size:.6rem">أسعار تقريبية</small></div>
+    <div id="cvR" style="font-weight:800;color:var(--navy-900);margin-top:.45rem;font-size:.88rem"></div>
+    <small style="color:var(--text-light);font-size:.64rem">أسعار تقريبية</small></div>
   </div>`;
  doCv();
  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${C.lat}&longitude=${C.lon}&current=temperature_2m,weather_code,wind_speed_10m`)
-  .then(r=>r.json()).then(j=>{const w=j.current;$('wBox').innerHTML=`<b>${Math.round(w.temperature_2m)}°</b> ${wtxt(w.weather_code)}<br>الرياح: ${Math.round(w.wind_speed_10m)} كم/س`;})
+  .then(r=>r.json()).then(j=>{const w=j.current;$('wBox').innerHTML=`<b>${Math.round(w.temperature_2m)}°</b> ${wtxt(w.weather_code)}<br><span style="font-size:.7rem">الرياح: ${Math.round(w.wind_speed_10m)} كم/س</span>`;})
   .catch(()=>{$('wBox').textContent='تعذر الاتصال بخدمة الطقس';});}
 function wtxt(c){return c===0?'صحو':c<3?'غائم جزئياً':c<45?'غائم':c<50?'ضباب':c<70?'أمطار':c<85?'ثلوج':'عاصفة';}
 function doCv(){const a=+$('cvA').value||0,f=$('cvF').value,t=$('cvT').value;
  $('cvR').textContent=(a/RATES[f]*RATES[t]).toFixed(2)+' '+t;}
 
 function pgCommunity(P){const posts=lg('sb_posts',[]);
- P.innerHTML=`<div class="sec">مجتمع المسافرين</div>
-  <p style="font-size:.75rem;color:var(--muted);margin-bottom:.7rem">شارك صورة من رحلاتك مع باقي الأعضاء — مجانا وبدون حدود.</p>
-  <div class="card"><label>صورة من رحلتك<input type="file" accept="image/*" id="pFile" style="font-size:.75rem"></label>
-  <label>وصف الصورة<input class="inp" id="pCap" placeholder="مثال: غروب رائع في إسطنبول..."></label>
-  <button class="btn w" onclick="addPost()">${ic('cam',16)} نشر المشاركة</button></div>
-  ${[...posts].reverse().map((p,ri)=>{const ix=posts.length-1-ri;return `<div class="post">${p.img?`<img src="${p.img}">`:`<div class="noimg">${ic('cam',30)}</div>`}
+ P.innerHTML=`
+  <div class="sec">مجتمع المسافرين</div>
+  <p style="font-size:.76rem;color:var(--text-muted);margin-bottom:.75rem">شارك لحظات وتجارب رحلاتك مع باقي المسافرين.</p>
+  <div class="card">
+   <label>صورة من الرحلة<input type="file" accept="image/*" id="pFile" style="font-size:.75rem;margin-top:.3rem"></label>
+   <label>وصف الصورة<input class="inp" id="pCap" placeholder="مثال: غروب رائع في إسطنبول..."></label>
+   <button class="btn navy w" onclick="addPost()">${ic('cam',16)} نشر المشاركة</button>
+  </div>
+  ${[...posts].reverse().map((p,ri)=>{const ix=posts.length-1-ri;return `<div class="post">${p.img?`<img src="${p.img}">`:`<div class="noimg">${ic('cam',26)}</div>`}
    <div class="pb"><p>${p.cap||''}</p><div class="pm"><span>${ic('user',12)} ${p.by}</span>
-   <button class="like" onclick="likePost(${ix})">${ic('heart',14)} ${p.likes||0}</button></div></div></div>`;}).join('')||'<div class="card" style="text-align:center;color:var(--muted);font-size:.78rem">كن أول من يشارك صورة!</div>'}`;}
+   <button class="like" onclick="likePost(${ix})">${ic('heart',14)} ${p.likes||0}</button></div></div></div>`;}).join('')||'<div class="card" style="text-align:center;color:var(--text-muted);font-size:.78rem">كن أول من يشارك صورة!</div>'}`;}
 function addPost(){const f=$('pFile').files[0],cap=$('pCap').value.trim();
  if(!f&&!cap){alert('أضف صورة أو وصفا على الأقل.');return;}
  const save=img=>{const posts=lg('sb_posts',[]);posts.push({img,cap,by:session.name,likes:0});
@@ -298,19 +721,20 @@ function addPost(){const f=$('pFile').files[0],cap=$('pCap').value.trim();
  if(f){const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');const s=Math.min(1,600/Math.max(img.width,img.height));c.width=img.width*s;c.height=img.height*s;c.getContext('2d').drawImage(img,0,0,c.width,c.height);save(c.toDataURL('image/jpeg',.7));};img.src=r.result;};r.readAsDataURL(f);}else save(null);}
 function likePost(ix){const p=lg('sb_posts',[]);p[ix].likes=(p[ix].likes||0)+1;ls('sb_posts',p);render();}
 
-function pgBot(P){P.innerHTML=`<div class="sec">المساعد الذكي</div>
+function pgBot(P){P.innerHTML=`
+  <div class="sec">المساعد الذكي</div>
   <div class="chat" id="chatBox">${chat.map(m=>`<div class="msg ${m.who}">${m.txt}</div>`).join('')||`<div class="msg bot">مرحباً ${session.name}! أنا سندباد، مساعدك الذكي للسفر. كيف يمكنني مساعدتك اليوم؟</div>`}</div>
-  <div class="sugs">${['أفضل فنادق إسطنبول','اقترح مطاعم في '+CITIES[city].n,'ما هي الأماكن السياحية؟','كيف أحول العملات؟'].map(s=>`<button class="chip" onclick="ask('${s}')">${s}</button>`).join('')}</div>
-  <div style="display:flex;gap:.4rem"><input class="inp" id="bIn" placeholder="اكتب رسالتك هنا..." onkeydown="if(event.key==='Enter')ask()"><button class="btn" onclick="ask()">${ic('send',16)}</button></div>`;
+  <div class="sugs">${['أفضل فنادق '+CITIES[city].n,'مطاعم في '+CITIES[city].n,'أهم المعالم السياحية','كيف أحول العملات؟'].map(s=>`<button class="chip" onclick="ask('${s}')">${s}</button>`).join('')}</div>
+  <div style="display:flex;gap:.45rem"><input class="inp" id="bIn" placeholder="اكتب استفسارك هنا..." onkeydown="if(event.key==='Enter')ask()"><button class="btn navy" onclick="ask()">${ic('send',15)}</button></div>`;
  const cb=$('chatBox');cb.scrollTop=cb.scrollHeight;}
 function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
  chat.push({who:'me',txt});const C=CITIES[city];let a='';
  if(txt.includes('فندق'))a='أفضل الفنادق في '+C.n+':\n'+C.hotels.map(h=>`• ${h.n} — $${h.p}/ليلة (★${h.r})`).join('\n');
  else if(txt.includes('مطعم')||txt.includes('أكل')||txt.includes('اكل'))a='مطاعم مقترحة في '+C.n+':\n'+C.rest.map(r=>`• ${r.n} — ${r.t}`).join('\n');
  else if(txt.includes('مكان')||txt.includes('معالم')||txt.includes('نزور')||txt.includes('سياح'))a='أهم المعالم في '+C.n+':\n'+C.spots.map(s=>`• ${s.n}: ${s.d}`).join('\n');
- else if(txt.includes('عمل')||txt.includes('درهم')||txt.includes('دولار'))a='تقدر تحول العملات من صفحة الخريطة — أداة تحويل العملات تعطيك السعر التقريبي فورا.';
- else if(txt.includes('طقس'))a='تقدر تشوف الطقس الحالي لأي مدينة من صفحة الخريطة.';
- else if(txt.includes('مرحبا')||txt.includes('سلام'))a='أهلا وسهلا! أنا هنا لمساعدتك في تخطيط رحلتك خطوة بخطوة.';
+ else if(txt.includes('عمل')||txt.includes('درهم')||txt.includes('دولار'))a='تقدر تحول العملات من صفحة الخريطة — أداة تحويل العملات تعطيك السعر التقريبي فوراً.';
+ else if(txt.includes('طقس'))a='تقدر تشوف الطقس الحالي لأي مدينة من صفحة الخريطة والأدوات.';
+ else if(txt.includes('مرحبا')||txt.includes('سلام'))a='أهلاً وسهلاً! أنا هنا لمساعدتك في تخطيط رحلتك واختيار أفضل الأماكن.';
  else a='نصيحتي لك: ابدأ بإنشاء خطة رحلتك من صفحة "رحلتي"، وسأقترح عليك الفنادق والمعالم والمطاعم في وجهتك. هل تريد معرفة المزيد عن '+C.n+'؟';
  chat.push({who:'bot',txt:a});render();}
 
