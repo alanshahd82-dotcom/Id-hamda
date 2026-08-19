@@ -837,10 +837,28 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
  let livePlaces = [];
  let liveRates = null;
  let liveError = '';
- const apiGet = (path) => fetch(path).then((res) => {
-   if (!res.ok) throw new Error('api_error');
-   return res.json();
- });
+ const apiGet = (path) => {
+   const isPages = location.hostname.endsWith('github.io');
+   if (!isPages) return fetch(path).then((res) => { if (!res.ok) throw new Error('api_error'); return res.json(); });
+   const query = new URL(path, location.href);
+   if (query.pathname === '/api/search') {
+     return fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=8&accept-language=ar,en&q=${encodeURIComponent(query.searchParams.get('q') || '')}`)
+       .then((res) => res.json()).then((items) => items.map((item) => ({ id:item.place_id, name:item.name || item.display_name.split(',')[0], displayName:item.display_name, lat:Number(item.lat), lon:Number(item.lon), country:item.address?.country || '', type:item.type })));
+   }
+   if (query.pathname === '/api/places') {
+     const lat=Number(query.searchParams.get('lat')), lon=Number(query.searchParams.get('lon')), kind=query.searchParams.get('kind') || 'tourism';
+     const filter=kind==='food'?'["amenity"~"restaurant|cafe|fast_food"]':kind==='hotels'?'["tourism"~"hotel|hostel|guest_house"]':'["tourism"~"attraction|museum|gallery|viewpoint|theme_park"]';
+     const overpass=`[out:json][timeout:20];(nwr(around:6000,${lat},${lon})${filter};);out center tags 25;`;
+     return fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpass)}`).then((res)=>{if(!res.ok)throw new Error('places_error');return res.json();}).then((data)=>(data.elements||[]).map((item)=>({id:`${item.type}/${item.id}`,name:item.tags?.name||item.tags?.['name:en']||'',category:item.tags?.amenity||item.tags?.tourism||kind,address:item.tags?.['addr:street']||item.tags?.['addr:city']||'',lat:item.lat??item.center?.lat,lon:item.lon??item.center?.lon,website:item.tags?.website||item.tags?.['contact:website']||'',phone:item.tags?.phone||''})).filter((item)=>item.name&&Number.isFinite(item.lat)&&Number.isFinite(item.lon)));
+   }
+   if (query.pathname === '/api/weather') {
+     return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${query.searchParams.get('lat')}&longitude=${query.searchParams.get('lon')}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`).then((res)=>{if(!res.ok)throw new Error('weather_error');return res.json();});
+   }
+   if (query.pathname === '/api/rates') {
+     return fetch(`https://open.er-api.com/v6/latest/${encodeURIComponent(query.searchParams.get('base') || 'MAD')}`).then((res)=>{if(!res.ok)throw new Error('rates_error');return res.json();});
+   }
+   return Promise.reject(new Error('api_error'));
+ };
  const destinationLabel = () => destination ? `${esc(destination.name)}${destination.country ? ` — ${esc(destination.country)}` : ''}` : 'اختر وجهتك من البحث';
  const requireDestination = (P) => {
    if (destination) return true;
