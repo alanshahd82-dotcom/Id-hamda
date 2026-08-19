@@ -1,7 +1,7 @@
 {
-  "name": "My Sindbad — مساعدك الذكي للسفر",
+  "name": "My Sindbad — رفيق السفر",
   "short_name": "My Sindbad",
-  "description": "مساعدك الذكي لتخطيط الرحلات واكتشاف الوجهات.",
+  "description": "رفيقك لتخطيط الرحلات واكتشاف الوجهات.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",

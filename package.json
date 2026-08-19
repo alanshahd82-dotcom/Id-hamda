@@ -2,7 +2,7 @@
   "name": "my-sindbad-pwa",
   "version": "1.0.0",
   "private": true,
-  "description": "My Sindbad — مساعدك الذكي للسفر",
+  "description": "My Sindbad — رفيق السفر",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
