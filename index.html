@@ -647,6 +647,75 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
          background: var(--danger-light);
          border-color: #fecaca;
        }
+       .service-rail {
+         display: flex;
+         gap: .75rem;
+         overflow-x: auto;
+         scroll-snap-type: x mandatory;
+         scrollbar-width: none;
+         padding: .1rem .05rem .55rem;
+         margin: 0 -.05rem 1.15rem;
+       }
+       .service-rail::-webkit-scrollbar { display: none; }
+       .service-slide {
+         position: relative;
+         flex: 0 0 148px;
+         min-height: 126px;
+         display: flex;
+         flex-direction: column;
+         align-items: flex-start;
+         justify-content: space-between;
+         gap: .55rem;
+         scroll-snap-align: start;
+         padding: .85rem;
+         border: 1px solid var(--border);
+         border-radius: 20px;
+         background: linear-gradient(145deg, #fff, #f7f9fc);
+         color: var(--navy-900);
+         text-align: right;
+         cursor: pointer;
+         font-family: inherit;
+         box-shadow: 0 6px 16px rgba(11,27,51,.06);
+         overflow: hidden;
+       }
+       .service-slide::after {
+         content: '';
+         position: absolute;
+         width: 70px;
+         height: 70px;
+         left: -18px;
+         bottom: -24px;
+         border-radius: 50%;
+         background: rgba(197,168,128,.15);
+       }
+       .service-slide:hover {
+         border-color: rgba(197,168,128,.75);
+         transform: translateY(-2px);
+         box-shadow: 0 10px 22px rgba(11,27,51,.1);
+       }
+       .service-slide .service-icon {
+         position: relative;
+         z-index: 1;
+         width: 38px;
+         height: 38px;
+         display: grid;
+         place-items: center;
+         border-radius: 13px;
+         background: var(--gold-light);
+         color: var(--gold-dark);
+       }
+       .service-slide strong,
+       .service-slide small,
+       .service-slide .service-arrow { position: relative; z-index: 1; }
+       .service-slide strong { font-size: .86rem; line-height: 1.2; }
+       .service-slide small { color: var(--text-muted); font-size: .64rem; line-height: 1.35; }
+       .service-slide .service-arrow {
+         position: absolute;
+         left: .75rem;
+         bottom: .75rem;
+         color: var(--gold-dark);
+         font-size: .9rem;
+       }
        @media (max-width: 380px) {
          .hdr { padding-inline: 14px; }
          .hdr .brand b { font-size: 1.08rem; }
@@ -761,11 +830,12 @@ function pgHome(P){const t=lg('sb_trip',null);
     <button class="btn navy sm" onclick="doSearch()">${ic('nav',14)} بحث</button>
    </div>
   </div>
-  <div class="cats">
-   <button class="cat" onclick="tab='hotels';go('explore')"><span class="ci">${ic('hotel',18)}</span>الفنادق</button>
-   <button class="cat" onclick="tab='rest';go('explore')"><span class="ci">${ic('food',18)}</span>المطاعم</button>
-   <button class="cat" onclick="tab='spots';go('explore')"><span class="ci">${ic('pin',18)}</span>الأماكن</button>
-   <button class="cat" onclick="go('trip')"><span class="ci">${ic('cal',18)}</span>رحلتي</button>
+     <div class="service-rail" aria-label="خدمات التطبيق">
+       <button class="service-slide" onclick="tab='hotels';go('explore')"><span class="service-icon">${ic('hotel',18)}</span><strong>الفنادق</strong><small>إقامات مناسبة لرحلتك</small><span class="service-arrow">←</span></button>
+       <button class="service-slide" onclick="tab='rest';go('explore')"><span class="service-icon">${ic('food',18)}</span><strong>المطاعم</strong><small>تجارب ومذاقات محلية</small><span class="service-arrow">←</span></button>
+       <button class="service-slide" onclick="tab='spots';go('explore')"><span class="service-icon">${ic('pin',18)}</span><strong>الأماكن</strong><small>معالم تستحق الزيارة</small><span class="service-arrow">←</span></button>
+       <button class="service-slide" onclick="go('trip')"><span class="service-icon">${ic('cal',18)}</span><strong>رحلتي</strong><small>خطة سفر منظمة</small><span class="service-arrow">←</span></button>
+       <button class="service-slide" onclick="go('bot')"><span class="service-icon">${ic('chat',18)}</span><strong>مساعد السفر</strong><small>رفيقك في كل خطوة</small><span class="service-arrow">←</span></button>
   </div>
   <div class="sec">رحلتي القادمة</div>
   ${t?`
