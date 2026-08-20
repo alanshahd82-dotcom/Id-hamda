@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./utils/navigation.css">
+  <link rel="stylesheet" href="./utils/header.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root { --navy: #0A192F; --navy-soft: #243b53; --gold: #D4AF37; --gold-dark: #b8941f; --bg: #fbf9f5; --line: #e8ecf2; --muted: #64748b; --danger: #dc2626; }
@@ -62,10 +63,7 @@
 </head>
 <body>
   <main class="shell">
-    <header class="header">
-      <a class="brand" href="./index.html"><img src="./icons/brand-logo.jpg" alt="شعار My Sindbad"><span><strong>My Sindbad</strong><small>رفيق السفر</small></span></a>
-      <a class="home-link" href="./index.html">الرئيسية</a>
-    </header>
+    <div data-site-header></div>
     <section class="content">
       <section class="profile-card" aria-labelledby="profile-title">
         <div class="avatar" aria-hidden="true">👤</div>
@@ -129,5 +127,6 @@
     renderTrips();
   </script>
 <script src="./utils/navigation.js"></script>
+<script src="./utils/header.js"></script>
 </body>
 </html>

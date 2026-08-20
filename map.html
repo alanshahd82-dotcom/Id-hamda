@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./utils/navigation.css">
+  <link rel="stylesheet" href="./utils/header.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
@@ -30,7 +31,7 @@
 </head>
 <body>
 <main class="shell">
-  <header class="header"><a class="brand" href="./index.html"><img src="./icons/brand-logo.jpg" alt="شعار My Sindbad"><span><b>My Sindbad</b><small>رفيق السفر</small></span></a><a href="./index.html" class="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white no-underline">الرئيسية</a></header>
+  <div data-site-header></div>
   <section class="content">
     <div class="intro"><p>MY SINDBAD · ملاحتك الذكية</p><h1>اكتشف المكان، وابدأ الرحلة</h1></div>
     <div class="map-wrap"><div id="map" aria-label="خريطة تفاعلية"></div><form class="search" id="search"><input id="query" type="search" placeholder="ابحث عن مكان أو مدينة..." aria-label="البحث عن مكان"><button aria-label="بحث">⌕</button></form><button class="locate" id="locate" type="button" aria-label="موقعي الحالي">⌖</button></div>
@@ -182,5 +183,6 @@
   });
 </script>
 <script src="./utils/navigation.js"></script>
+<script src="./utils/header.js"></script>
 </body>
 </html>

@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./utils/navigation.css">
+  <link rel="stylesheet" href="./utils/header.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root{--navy:#0A192F;--navy2:#243b53;--gold:#D4AF37;--dark:#b8941f;--bg:#fbf9f5;--line:#e8ecf2;--muted:#64748b}
@@ -26,7 +27,7 @@
 </head>
 <body>
 <main class="shell">
-  <header class="header"><a class="brand" href="./index.html"><img src="./icons/brand-logo.jpg" alt="شعار My Sindbad"><span><b>My Sindbad</b><small>رفيق السفر</small></span></a><a href="./index.html" class="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white no-underline">الرئيسية</a></header>
+  <div data-site-header></div>
   <section class="content">
     <div class="intro"><p>MY SINDBAD · اكتشف حولك</p><h1>أماكن تستحق الزيارة</h1><small id="destination-label">وجهتك الحالية</small></div>
     <section class="weather" aria-live="polite"><span class="weather-label">الطقس الآن</span><h2 id="weather-city">جارٍ تحديد الوجهة...</h2><div class="weather-row"><strong class="temperature" id="temperature">—</strong><span class="weather-text" id="weather-text">جارٍ تحميل حالة الطقس</span></div><small id="forecast" style="color:#fffb;font-size:.65rem">التوقعات متاحة بعد التحميل</small></section>
@@ -59,5 +60,6 @@ async function loadWeather(location){try{const r=await fetch(`https://api.open-m
 const location=readTrip();spent=activities.reduce((sum,a)=>sum+Number(a.price||0),0);renderBudget();renderPlaces('hotels');loadWeather(location);document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-type]').forEach(x=>x.classList.toggle('active',x===b));renderPlaces(b.dataset.type)}));
 </script>
 <script src="./utils/navigation.js"></script>
+<script src="./utils/header.js"></script>
 </body>
 </html>

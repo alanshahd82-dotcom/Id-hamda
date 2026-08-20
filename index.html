@@ -13,6 +13,7 @@
 <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
 <link rel="apple-touch-icon" href="./icons/brand-logo.jpg">
 <link rel="stylesheet" href="./utils/navigation.css">
+<link rel="stylesheet" href="./utils/header.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -862,10 +863,7 @@ function doOut(){session=null;ls('sb_session',null);render();}
 
 /* ===== الهيكل ===== */
  function appHTML(){return `
-  <div class="hdr bg-navy-900/90 backdrop-blur-md">
-    <div class="brand">${LOGO}<div class="brand-copy"><b class="en text-gold-500 font-bold text-2xl">My Sindbad</b><small>رفيق السفر</small><span class="live-indicator" id="liveIndicator"><i></i><span id="liveStatus">متصل الآن</span><span> · </span><span class="live-time" id="liveClock">--:--</span></span></div></div>
-   <div class="u"><button class="install-app" id="installApp" type="button" onclick="installApp()">تثبيت التطبيق</button><span class="user-name">${esc(session.name||'زائر')}</span><div class="av" aria-label="حساب ${esc(session.name||'زائر')}">${esc((session.name||'ز').charAt(0))}</div><button onclick="doOut()" title="تسجيل الخروج" aria-label="تسجيل الخروج">${ic('out',16)}</button></div>
- </div>
+  <div data-site-header></div>
  <div class="content" id="pg"></div>
  <div class="foot"></div>
      <nav class="site-nav" aria-label="التنقل الرئيسي">${NAVB.map(n=>{const href=n.id==='map'?'./map.html':n.id==='explore'?'./explore.html':n.id==='profile'?'./profile.html':n.id==='community'?'./community.html':n.id==='trip'?'./create-trip.html':'./index.html';return `<a href="${href}" class="${n.id===page?'active':''}" ${n.id===page?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${ic(n.i,18)}</span><span>${n.t}</span></a>`}).join('')}</nav>`;}
@@ -1083,38 +1081,6 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
    liveError = '';
    go('explore');
  };
-  let deferredInstallPrompt = null;
-  let liveClockTimer = null;
-   function updateLiveHeader() {
-     const clock = $('liveClock');
-     const indicator = $('liveIndicator');
-     const status = $('liveStatus');
-     if (!clock || !indicator || !status) return;
-     const online = navigator.onLine;
-     clock.textContent = new Intl.DateTimeFormat('ar-MA', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date());
-     status.textContent = online ? 'متصل الآن' : 'غير متصل';
-     indicator.classList.toggle('offline', !online);
-     indicator.setAttribute('aria-label', online ? 'التطبيق متصل بالإنترنت' : 'التطبيق غير متصل بالإنترنت');
-   }
-   window.addEventListener('online', updateLiveHeader);
-   window.addEventListener('offline', updateLiveHeader);
-  window.addEventListener('beforeinstallprompt', (event) => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    setupInstallPrompt();
-  });
-  function setupInstallPrompt() {
-    const button = $('installApp');
-    if (button && deferredInstallPrompt) button.classList.add('ready');
-  }
-  async function installApp() {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    await deferredInstallPrompt.userChoice;
-    deferredInstallPrompt = null;
-    const button = $('installApp');
-    if (button) button.classList.remove('ready');
-  }
   function render() {
     if (!session) {
       $('shell').innerHTML = authHTML();
@@ -1129,10 +1095,6 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
    if (!P) return;
    const pages = { home: pgHome, explore: pgExplore, trip: pgTrip, map: pgMap, bot: pgBot };
    (pages[page] || pgHome)(P);
-    setupInstallPrompt();
-    updateLiveHeader();
-    if (liveClockTimer) clearInterval(liveClockTimer);
-     liveClockTimer = setInterval(updateLiveHeader, 1000);
  }
  function pgHome(P) {
    const t = lg('sb_trip', null);
@@ -1232,5 +1194,6 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
 }
 </script>
+<script src="./utils/header.js"></script>
 </body>
 </html>
