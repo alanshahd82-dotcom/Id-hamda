@@ -866,7 +866,7 @@ function doOut(){session=null;ls('sb_session',null);render();}
  </div>
  <div class="content" id="pg"></div>
  <div class="foot"></div>
-   <div class="bnav bg-navy-900/95">${NAVB.map(n=>n.id==='map'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./map.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="go('${n.id}')">${ic(n.i,18)}<span>${n.t}</span></button>`).join('')}</div>`;}
+   <div class="bnav bg-navy-900/95">${NAVB.map(n=>n.id==='map'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./map.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:n.id==='explore'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./explore.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="go('${n.id}')">${ic(n.i,18)}<span>${n.t}</span></button>`).join('')}</div>`;}
 function go(p){page=p;render();}
 function bind(){const P=$('pg');if(!P)return;({home:pgHome,trip:pgTrip,explore:pgExplore,map:pgMap,community:pgCommunity,bot:pgBot})[page](P);}
 const cityChips=()=>`<div class="row" style="margin-bottom:.85rem">${Object.keys(CITIES).map(c=>`<button class="chip ${c===city?'on':''}" onclick="city='${c}';render()">${CITIES[c].n}</button>`).join('')}</div>`;
