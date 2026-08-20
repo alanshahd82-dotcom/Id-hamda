@@ -12,6 +12,7 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
 <link rel="apple-touch-icon" href="./icons/brand-logo.jpg">
+<link rel="stylesheet" href="./utils/navigation.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -867,7 +868,7 @@ function doOut(){session=null;ls('sb_session',null);render();}
  </div>
  <div class="content" id="pg"></div>
  <div class="foot"></div>
-   <div class="bnav bg-navy-900/95">${NAVB.map(n=>n.id==='map'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./map.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:n.id==='explore'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./explore.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:n.id==='profile'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./profile.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:n.id==='community'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./community.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="go('${n.id}')">${ic(n.i,18)}<span>${n.t}</span></button>`).join('')}</div>`;}
+     <nav class="site-nav" aria-label="التنقل الرئيسي">${NAVB.map(n=>{const href=n.id==='map'?'./map.html':n.id==='explore'?'./explore.html':n.id==='profile'?'./profile.html':n.id==='community'?'./community.html':n.id==='trip'?'./create-trip.html':'./index.html';return `<a href="${href}" class="${n.id===page?'active':''}" ${n.id===page?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${ic(n.i,18)}</span><span>${n.t}</span></a>`}).join('')}</nav>`;}
 function go(p){page=p;render();}
 function bind(){const P=$('pg');if(!P)return;({home:pgHome,trip:pgTrip,explore:pgExplore,map:pgMap,community:pgCommunity,bot:pgBot})[page](P);}
 const cityChips=()=>`<div class="row" style="margin-bottom:.85rem">${Object.keys(CITIES).map(c=>`<button class="chip ${c===city?'on':''}" onclick="city='${c}';render()">${CITIES[c].n}</button>`).join('')}</div>`;

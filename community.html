@@ -9,6 +9,7 @@
 <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./utils/navigation.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 :root{--navy:#0A192F;--navy-soft:#243b53;--gold:#D4AF37;--gold-dark:#b8941f;--bg:#fbf9f5;--line:#e8ecf2;--muted:#64748b;--danger:#dc2626}
@@ -19,7 +20,7 @@
 <main class="shell">
 <header class="header"><a class="brand" href="./index.html"><img src="./icons/brand-logo.jpg" alt="شعار My Sindbad"><span><strong>My Sindbad</strong><small>رفيق السفر</small></span></a><a class="home-link" href="./index.html">الرئيسية</a></header>
 <section class="content"><div class="intro"><p>MY SINDBAD · مجتمع المسافرين</p><h1>إلهام من رحلات حقيقية</h1><span>اكتشف أماكن جديدة من تجارب مسافرين مثلك، وأضفها إلى رحلتك بضغطة واحدة.</span></div><section id="feed" class="feed" aria-live="polite"></section></section>
-<nav class="nav" aria-label="التنقل الرئيسي"><a href="./index.html">⌂<span>الرئيسية</span></a><a href="./explore.html">◈<span>استكشف</span></a><a href="./itinerary.html">✈<span>رحلتي</span></a><a href="./map.html">⌖<span>الخريطة</span></a><a href="./community.html" class="active" aria-current="page">♧<span>المجتمع</span></a><a href="./profile.html">👤<span>حسابي</span></a></nav>
+<nav data-site-nav data-active="community"></nav>
 </main><div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
 function generateMockPosts(){return[
@@ -41,4 +42,5 @@ function addToTrip(post,button){const current=readLocal('currentTrip',null);if(!
 function bind(){document.querySelectorAll('[data-post]').forEach((card)=>{const id=Number(card.dataset.post),post=posts.find((item)=>item.id===id);card.querySelectorAll('[data-action]').forEach((button)=>button.addEventListener('click',async()=>{const action=button.dataset.action;if(action==='like'){post.isLiked=!post.isLiked;post.likes=Math.max(0,post.likes+(post.isLiked?1:-1));persistPost(post);render();return}if(action==='save'){post.isSaved=!post.isSaved;persistPost(post);render();showToast(post.isSaved?'تم حفظ المنشور.':'تمت إزالة الحفظ.');return}if(action==='comment'){card.querySelector('[data-comments]').classList.toggle('show');return}if(action==='report'){showToast('شكراً، سنراجع هذا المنشور.');return}if(action==='share'){const url=window.location.href.split('#')[0]+'#post-'+post.id;try{if(navigator.share)await navigator.share({title:`${post.location} — My Sindbad`,text:post.description,url});else if(navigator.clipboard)await navigator.clipboard.writeText(url);showToast(navigator.share?'تمت مشاركة المنشور.':'تم نسخ رابط المنشور.')}catch(error){if(error.name!=='AbortError')showToast('تعذر مشاركة المنشور حالياً.')}return}if(action==='add')addToTrip(post,button)}));const form=card.querySelector('.comment-form');form.addEventListener('submit',(event)=>{event.preventDefault();const input=form.querySelector('input'),value=input.value.trim();if(!value)return;commentsState[id]=Array.isArray(commentsState[id])?commentsState[id]:[];commentsState[id].push(value);writeLocal('communityComments',commentsState);render();const next=document.querySelector(`[data-post="${id}"] [data-comments]`);if(next)next.classList.add('show');showToast('تمت إضافة تعليقك.')})})}
 render();bind();
 </script>
+<script src="./utils/navigation.js"></script>
 </body></html>

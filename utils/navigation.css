@@ -1,0 +1,64 @@
+/* Shared navigation for every My Sindbad page. */
+.site-nav {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 25, 47, 0.96);
+  box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(14px);
+}
+
+.site-nav a {
+  display: flex;
+  min-height: 52px;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  font-size: 0.58rem;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: color 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: #ffcc33;
+  outline: none;
+}
+
+.site-nav a:active {
+  transform: scale(0.97);
+}
+
+.site-nav a.active {
+  color: #ffcc33;
+  background: rgba(212, 175, 55, 0.18);
+  font-weight: 800;
+}
+
+.site-nav .nav-icon {
+  display: block;
+  min-height: 1.2em;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+@media (min-width: 700px) {
+  .site-nav {
+    position: absolute;
+    border-radius: 0 0 28px 28px;
+  }
+}

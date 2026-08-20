@@ -10,6 +10,7 @@
   <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./utils/navigation.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root { --navy: #0A192F; --navy-soft: #243b53; --gold: #D4AF37; --gold-dark: #b8941f; --bg: #fbf9f5; --line: #e8ecf2; --muted: #64748b; --danger: #dc2626; }
@@ -86,9 +87,7 @@
       <section id="saved-trips" class="trips" aria-live="polite"></section>
       <button id="logout" class="logout" type="button">تسجيل الخروج</button>
     </section>
-    <nav class="nav" aria-label="التنقل الرئيسي">
-      <a href="./index.html">⌂<span>الرئيسية</span></a><a href="./explore.html">◈<span>استكشف</span></a><a href="./itinerary.html">✈<span>رحلتي</span></a><a href="./map.html">⌖<span>الخريطة</span></a><a href="./community.html">♧<span>المجتمع</span></a><a href="./profile.html" class="active" aria-current="page">👤<span>حسابي</span></a>
-    </nav>
+    <nav data-site-nav data-active="profile"></nav>
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite">تم حفظ الإعدادات بنجاح</div>
   <script>
@@ -129,5 +128,6 @@
     document.getElementById('logout').addEventListener('click', () => { try { ['sb_session', 'currentTrip', 'currentItinerary', 'myTripActivities'].forEach((key) => localStorage.removeItem(key)); } catch (error) {} window.location.href = './index.html'; });
     renderTrips();
   </script>
+<script src="./utils/navigation.js"></script>
 </body>
 </html>

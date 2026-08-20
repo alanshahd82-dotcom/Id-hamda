@@ -9,7 +9,9 @@
   <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./utils/navigation.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="./utils/navigation.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -198,14 +200,7 @@
       </form>
     </section>
 
-    <nav class="fixed bottom-0 left-1/2 z-30 flex w-full max-w-[480px] -translate-x-1/2 border-t border-white/10 bg-navy-900/95 px-2 py-2 pb-[calc(.5rem+env(safe-area-inset-bottom))] text-white shadow-[0_-4px_18px_rgba(0,0,0,.16)] backdrop-blur-xl" aria-label="التنقل الرئيسي">
-      <a href="./index.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">⌂<span>الرئيسية</span></a>
-      <a href="./explore.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">◈<span>استكشف</span></a>
-      <a href="./create-trip.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl bg-gold-500/15 text-[.65rem] font-bold text-gold-400">✈<span>رحلتي</span></a>
-      <a href="./map.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">⌖<span>الخريطة</span></a>
-      <a href="./community.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">♧<span>المجتمع</span></a>
-      <a href="./profile.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">👤<span>حسابي</span></a>
-    </nav>
+    <nav data-site-nav data-active="trip" data-trip-href="./create-trip.html"></nav>
   </main>
 
   <script>
@@ -239,7 +234,22 @@
         preferences: data.getAll('preferences'),
         createdAt: new Date().toISOString(),
       };
-      localStorage.setItem('currentTrip', JSON.stringify(trip));
+      try {
+        localStorage.setItem('currentTrip', JSON.stringify(trip));
+        localStorage.setItem('sb_trip', JSON.stringify({
+          ...trip,
+          city: trip.destination,
+          destinationName: trip.destination,
+          from: trip.dates.start,
+          to: trip.dates.end,
+          days: [[]],
+          check: ['جواز السفر', 'تذاكر السفر', 'حجز الفندق', 'تأمين السفر', 'شاحن الهاتف'].map((t) => ({ t, done: false }))
+        }));
+      } catch (error) {
+        formError.textContent = 'تعذر حفظ الرحلة على هذا الجهاز. تحقق من مساحة التخزين وحاول مرة أخرى.';
+        formError.classList.remove('hidden');
+        return;
+      }
       successMessage.classList.add('show');
       form.querySelector('button[type="submit"]').disabled = true;
       window.setTimeout(() => { window.location.href = './index.html'; }, 2000);

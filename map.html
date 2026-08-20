@@ -8,6 +8,7 @@
   <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./utils/navigation.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
@@ -37,7 +38,7 @@
     <p class="status" id="status" role="status">ابحث عن مكان أو اضغط على الخريطة لاختيار وجهة.</p>
     <article class="place" id="place"><h2 id="name">المكان المختار</h2><div class="meta"><div><small>المسافة</small><b id="distance">—</b></div><div><small>الوقت المتوقع</small><b id="duration">—</b></div></div><button class="add" id="add" type="button">أضف إلى رحلتي ➕</button></article>
   </section>
-  <nav class="nav" aria-label="التنقل الرئيسي"><a href="./index.html">⌂<span>الرئيسية</span></a><a href="./explore.html">◈<span>استكشف</span></a><a href="./itinerary.html">✈<span>رحلتي</span></a><a href="./map.html" class="active" aria-current="page">⌖<span>الخريطة</span></a><a href="./community.html">♧<span>المجتمع</span></a><a href="./profile.html">👤<span>حسابي</span></a></nav>
+  <nav data-site-nav data-active="map"></nav>
 </main>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
@@ -163,16 +164,23 @@
     try { const value = JSON.parse(localStorage.getItem('myTripActivities') || '[]'); activities = Array.isArray(value) ? value : []; } catch (error) { activities = []; }
     const item = { id: `map-${selected.lat}-${selected.lon}`, title: selected.name, place: selected.name, type: 'وجهة من الخريطة', lat: selected.lat, lon: selected.lon, distance: $('distance').textContent, duration: $('duration').textContent, addedAt: new Date().toISOString() };
     if (!activities.some((entry) => entry && entry.id === item.id)) activities.push(item);
-    try { localStorage.setItem('myTripActivities', JSON.stringify(activities)); trip = JSON.parse(localStorage.getItem('sb_trip') || 'null'); } catch (error) { trip = null; }
+    try {
+      localStorage.setItem('myTripActivities', JSON.stringify(activities));
+      trip = JSON.parse(localStorage.getItem('currentTrip') || localStorage.getItem('sb_trip') || 'null');
+    } catch (error) { trip = null; }
     if (trip && typeof trip === 'object') {
       trip.days = Array.isArray(trip.days) && trip.days.length ? trip.days : [[]];
       trip.days[0].push({ title: selected.name, time: '10:00', type: 'وجهة من الخريطة', lat: selected.lat, lon: selected.lon });
-      try { localStorage.setItem('sb_trip', JSON.stringify(trip)); } catch (error) {}
+      try {
+        localStorage.setItem('currentTrip', JSON.stringify(trip));
+        localStorage.setItem('sb_trip', JSON.stringify(trip));
+      } catch (error) {}
     }
     $('add').textContent = '✓ تمت الإضافة إلى رحلتك';
     $('add').disabled = true;
     status('تم حفظ المكان في رحلتك بنجاح.');
   });
 </script>
+<script src="./utils/navigation.js"></script>
 </body>
 </html>

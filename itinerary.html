@@ -9,6 +9,7 @@
   <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./utils/navigation.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -224,14 +225,7 @@
           </div>
           <a href="./create-trip.html" class="mt-7 flex min-h-12 items-center justify-center rounded-xl border-2 border-navy-900 px-4 py-3 text-sm font-bold text-navy-900 transition hover:bg-navy-900 hover:text-white">تعديل بيانات الرحلة</a>
         </section>
-        <nav class="fixed bottom-0 left-1/2 z-30 flex w-full max-w-[480px] -translate-x-1/2 border-t border-white/10 bg-navy-900/95 px-2 py-2 pb-[calc(.5rem+env(safe-area-inset-bottom))] text-white shadow-[0_-4px_18px_rgba(0,0,0,.16)] backdrop-blur-xl" aria-label="التنقل الرئيسي">
-          <a href="./index.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">⌂<span>الرئيسية</span></a>
-           <a href="./explore.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">◈<span>استكشف</span></a>
-          <a href="./itinerary.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl bg-gold-500/15 text-[.65rem] font-bold text-gold-400">✈<span>رحلتي</span></a>
-           <a href="./map.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">⌖<span>الخريطة</span></a>
-          <a href="./community.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">♧<span>المجتمع</span></a>
-          <a href="./profile.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">👤<span>حسابي</span></a>
-        </nav>`;
+        <nav data-site-nav data-active="trip"></nav>`;
       app.querySelectorAll('[data-add]').forEach((button) => button.addEventListener('click', () => {
         const [dayIndex, activityIndex] = button.dataset.add.split(':').map(Number);
         const activity = itinerary[dayIndex].activities[activityIndex];
@@ -296,5 +290,6 @@
       render();
     }, 2500);
   </script>
+  <script src="./utils/navigation.js"></script>
 </body>
 </html>
