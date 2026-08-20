@@ -125,7 +125,7 @@
     notifications.addEventListener('click', () => { const enabled = !notifications.classList.contains('on'); notifications.classList.toggle('on', enabled); notifications.setAttribute('aria-checked', String(enabled)); writeLocal('notificationsEnabled', enabled); showToast(); });
     document.getElementById('favorite-count').textContent = Array.isArray(readLocal('favorites', [])) ? readLocal('favorites', []).length : 0;
     document.getElementById('points-count').textContent = Number(readLocal('points', readLocal('sb_points', 0))) || 0;
-    document.getElementById('logout').addEventListener('click', () => { try { ['sb_session', 'currentTrip', 'currentItinerary', 'myTripActivities'].forEach((key) => localStorage.removeItem(key)); } catch (error) {} window.location.href = './index.html'; });
+    document.getElementById('logout').addEventListener('click', () => { try { ['sb_session', 'currentTrip', 'currentItinerary', 'myTripActivities', 'sb_trip', 'sb_destination'].forEach((key) => localStorage.removeItem(key)); } catch (error) {} window.location.href = './index.html'; });
     renderTrips();
   </script>
 <script src="./utils/navigation.js"></script>

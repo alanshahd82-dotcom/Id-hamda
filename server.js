@@ -94,10 +94,12 @@ async function handleApi(request, response, url) {
     }
 
     if (url.pathname === '/api/places' && request.method === 'GET') {
-      const lat = Number(url.searchParams.get('lat'));
-      const lon = Number(url.searchParams.get('lon'));
+      const latParam = url.searchParams.get('lat');
+      const lonParam = url.searchParams.get('lon');
+      const lat = Number(latParam);
+      const lon = Number(lonParam);
       const kind = url.searchParams.get('kind') || 'tourism';
-      if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      if (!latParam || !lonParam || !Number.isFinite(lat) || !Number.isFinite(lon)) {
         sendJson(response, 400, { error: 'إحداثيات الوجهة غير صالحة.' });
         return true;
       }
@@ -123,9 +125,11 @@ async function handleApi(request, response, url) {
     }
 
     if (url.pathname === '/api/weather' && request.method === 'GET') {
-      const lat = Number(url.searchParams.get('lat'));
-      const lon = Number(url.searchParams.get('lon'));
-      if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      const latParam = url.searchParams.get('lat');
+      const lonParam = url.searchParams.get('lon');
+      const lat = Number(latParam);
+      const lon = Number(lonParam);
+      if (!latParam || !lonParam || !Number.isFinite(lat) || !Number.isFinite(lon)) {
         sendJson(response, 400, { error: 'إحداثيات الطقس غير صالحة.' });
         return true;
       }

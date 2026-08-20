@@ -24,6 +24,11 @@
     });
   }
 
-  mount();
-  new MutationObserver(mount).observe(document.body, { childList: true, subtree: true });
+  function start() {
+    mount();
+    new MutationObserver(mount).observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (document.body) start();
+  else document.addEventListener('DOMContentLoaded', start, { once: true });
 })();
