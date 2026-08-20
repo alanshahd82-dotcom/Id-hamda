@@ -775,6 +775,7 @@ cloud:'<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>',
 cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',
 list:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
 user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
 out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
 nav:'<polygon points="3 11 22 2 13 21 11 13 3 11"/>'
 };
@@ -822,7 +823,7 @@ const CITY_IMAGES={
  paris:'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=700&q=82'
 };
 const RATES={USD:1,EUR:.92,GBP:.79,TRY:33,MAD:10.1,AED:3.67,SAR:3.75,EGP:47.5};
-const NAVB=[{id:'home',t:'الرئيسية',i:'home'},{id:'explore',t:'استكشف',i:'compass'},{id:'trip',t:'رحلتي',i:'plane'},{id:'map',t:'الخريطة',i:'map'},{id:'profile',t:'حسابي',i:'user'}];
+const NAVB=[{id:'home',t:'الرئيسية',i:'home'},{id:'explore',t:'استكشف',i:'compass'},{id:'trip',t:'رحلتي',i:'plane'},{id:'map',t:'الخريطة',i:'map'},{id:'community',t:'المجتمع',i:'users'},{id:'profile',t:'حسابي',i:'user'}];
 const $=id=>document.getElementById(id);
 const ls=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 const lg=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d;}catch(e){return d;}};
@@ -866,7 +867,7 @@ function doOut(){session=null;ls('sb_session',null);render();}
  </div>
  <div class="content" id="pg"></div>
  <div class="foot"></div>
-   <div class="bnav bg-navy-900/95">${NAVB.map(n=>n.id==='map'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./map.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:n.id==='explore'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./explore.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:n.id==='profile'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./profile.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="go('${n.id}')">${ic(n.i,18)}<span>${n.t}</span></button>`).join('')}</div>`;}
+   <div class="bnav bg-navy-900/95">${NAVB.map(n=>n.id==='map'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./map.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:n.id==='explore'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./explore.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:n.id==='profile'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./profile.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:n.id==='community'?`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="window.location.href='./community.html'">${ic(n.i,18)}<span>${n.t}</span></button>`:`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="go('${n.id}')">${ic(n.i,18)}<span>${n.t}</span></button>`).join('')}</div>`;}
 function go(p){page=p;render();}
 function bind(){const P=$('pg');if(!P)return;({home:pgHome,trip:pgTrip,explore:pgExplore,map:pgMap,community:pgCommunity,bot:pgBot})[page](P);}
 const cityChips=()=>`<div class="row" style="margin-bottom:.85rem">${Object.keys(CITIES).map(c=>`<button class="chip ${c===city?'on':''}" onclick="city='${c}';render()">${CITIES[c].n}</button>`).join('')}</div>`;
