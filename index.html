@@ -223,8 +223,11 @@ label .inp { margin-top: 0.35rem; }
   padding: 2.2rem 1.4rem;
   text-align: center;
 }
-.auth .logo { width: 76px; height: 76px; margin-bottom: 0.8rem; }
-.auth .logo img { width: 100%; height: 100%; display: block; object-fit: cover; border-radius: 22%; }
+.auth .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem; }
+.auth .logo svg { display: block; width: 52px; height: 52px; flex: 0 0 auto; }
+.auth .logo-copy { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
+.auth .logo-copy strong { color: var(--gold); font: 700 1.35rem 'Playfair Display', Georgia, serif; }
+.auth .logo-copy small { margin-top: 4px; color: #fff; font-size: .68rem; }
 .auth h1 { font-size: 1.85rem; color: #ffffff; letter-spacing: 0.5px; margin-bottom: 0.15rem; }
 .auth .tag { color: var(--gold); font-size: 0.76rem; letter-spacing: .4px; font-weight: 700; margin-bottom: 1.6rem; }
 .auth-card {
@@ -792,7 +795,12 @@ out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 
 nav:'<polygon points="3 11 22 2 13 21 11 13 3 11"/>'
 };
 const ic=(n,s=18)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
-const LOGO=`<img src="./icons/brand-logo.jpg" alt="شعار My Sindbad" class="brand-logo">`;
+const LOGO=`<svg viewBox="0 0 32 32" fill="none" role="img" aria-label="أيقونة My Sindbad">
+ <path d="M4 20L8 16L12 20L16 16L20 20L24 16L28 20" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/>
+ <path d="M8 20V26H24V20" fill="#D4AF37"/>
+ <path d="M16 8V16" stroke="#D4AF37" stroke-width="2"/>
+ <path d="M16 8L22 12L16 16Z" fill="#D4AF37"/>
+</svg><span class="logo-copy"><strong>My Sindbad</strong><small>رفيق السفر</small></span>`;
 
 function applyDynamicTheme() {
   if (!window.MySindbadTimeUtils || !session) return;
