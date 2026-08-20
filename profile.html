@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>حسابي — My Sindbad</title>
+  <meta name="theme-color" content="#0A192F">
+  <meta name="description" content="إدارة حسابك ورحلاتك المحفوظة وتفضيلاتك في My Sindbad">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { --navy: #0A192F; --navy-soft: #243b53; --gold: #D4AF37; --gold-dark: #b8941f; --bg: #fbf9f5; --line: #e8ecf2; --muted: #64748b; --danger: #dc2626; }
+    * { box-sizing: border-box; font-family: 'Cairo', system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; background: #060e1a; color: #0c1624; }
+    .shell { width: 100%; max-width: 480px; min-height: 100vh; margin: 0 auto; padding-bottom: calc(92px + env(safe-area-inset-bottom)); background: var(--bg); box-shadow: 0 0 60px #0005; }
+    .header { display: flex; align-items: center; justify-content: space-between; min-height: 76px; padding: calc(14px + env(safe-area-inset-top)) 18px 12px; background: #0a192ff7; color: #fff; border-bottom: 1px solid #d4af374d; }
+    .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
+    .brand img { width: 44px; height: 44px; border-radius: 14px; object-fit: cover; border: 1px solid #d4af3770; }
+    .brand strong { display: block; color: var(--gold); font: 700 1.18rem 'Playfair Display', Georgia, serif; }
+    .brand small { display: block; color: #fffb; font-size: .64rem; }
+    .home-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border: 1px solid #ffffff33; border-radius: 12px; color: #fff; text-decoration: none; font-size: .72rem; font-weight: 700; }
+    .content { padding: 18px; }
+    .profile-card { display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: 22px; color: #fff; background: linear-gradient(135deg, var(--navy), var(--navy-soft)); box-shadow: 0 12px 24px #0b1b5130; }
+    .avatar { display: grid; place-items: center; flex: 0 0 68px; width: 68px; height: 68px; border: 3px solid var(--gold); border-radius: 50%; color: var(--navy); background: #fffaf0; font-size: 1.6rem; }
+    .profile-card h1 { margin: 0; font-size: 1.08rem; font-weight: 800; }
+    .profile-card p { margin: 4px 0 0; color: #ffffffb8; font-size: .72rem; direction: ltr; text-align: right; }
+    .section-title { display: flex; align-items: center; justify-content: space-between; margin: 22px 2px 10px; color: var(--navy); font-size: .9rem; font-weight: 800; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat { padding: 12px 6px; text-align: center; border: 1px solid var(--line); border-radius: 16px; background: #fff; box-shadow: 0 6px 16px #0b1b5108; }
+    .stat strong { display: block; color: var(--navy); font-size: 1.08rem; }
+    .stat span { display: block; margin-top: 2px; color: var(--muted); font-size: .62rem; }
+    .settings { overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: #fff; }
+    .setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 62px; padding: 10px 14px; border-bottom: 1px solid #f1f4f8; }
+    .setting:last-child { border-bottom: 0; }
+    .setting-info { display: flex; align-items: center; gap: 10px; color: var(--navy); font-size: .76rem; font-weight: 700; }
+    .setting-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: var(--gold-dark); background: #fffaf0; font-size: 1rem; }
+    select { min-height: 44px; min-width: 112px; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; color: var(--navy); background: #fff; font-size: .7rem; font-weight: 700; outline: none; }
+    select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px #d4af3726; }
+    .toggle { position: relative; width: 48px; height: 28px; border: 0; border-radius: 99px; background: #cbd5e1; cursor: pointer; }
+    .toggle::after { content: ''; position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .2s ease; }
+    .toggle.on { background: var(--gold); }
+    .toggle.on::after { transform: translateX(-20px); }
+    .trips { display: grid; gap: 10px; }
+    .trip { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+    .trip h3 { margin: 0; color: var(--navy); font-size: .78rem; font-weight: 800; }
+    .trip p { margin: 4px 0 0; color: var(--muted); font-size: .65rem; }
+    .trip-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 11px; border-radius: 10px; color: var(--navy); background: #fffaf0; font-size: .65rem; font-weight: 800; text-decoration: none; white-space: nowrap; }
+    .empty { padding: 22px 14px; text-align: center; border: 1px dashed #cbd5e1; border-radius: 16px; color: var(--muted); background: #fff; font-size: .72rem; line-height: 1.8; }
+    .logout { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; margin-top: 22px; border: 1px solid #fecaca; border-radius: 13px; color: var(--danger); background: #fff1f2; cursor: pointer; font-size: .76rem; font-weight: 800; }
+    .toast { position: fixed; right: 50%; bottom: 94px; z-index: 40; display: none; transform: translateX(50%); padding: 11px 16px; border-radius: 12px; color: #fff; background: var(--navy); box-shadow: 0 8px 22px #0004; font-size: .72rem; font-weight: 700; }
+    .toast.show { display: block; animation: toast .25s ease both; }
+    @keyframes toast { from { opacity: 0; transform: translate(50%, 8px); } to { opacity: 1; transform: translate(50%, 0); } }
+    .nav { position: fixed; bottom: 0; left: 50%; z-index: 30; display: flex; width: 100%; max-width: 480px; transform: translateX(-50%); padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); background: #0a192ff7; border-top: 1px solid #fff2; box-shadow: 0 -4px 18px #0003; backdrop-filter: blur(14px); }
+    .nav a { display: flex; min-height: 52px; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 12px; color: #fffa; text-decoration: none; font-size: .58rem; }
+    .nav a.active { color: var(--gold); background: #d4af3729; font-weight: 800; }
+    @media (min-width: 700px) { .shell { margin: 22px auto; min-height: calc(100vh - 44px); border-radius: 28px; overflow: hidden; } .nav { position: absolute; border-radius: 0 0 28px 28px; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <a class="brand" href="./index.html"><img src="./icons/brand-logo.jpg" alt="شعار My Sindbad"><span><strong>My Sindbad</strong><small>رفيق السفر</small></span></a>
+      <a class="home-link" href="./index.html">الرئيسية</a>
+    </header>
+    <section class="content">
+      <section class="profile-card" aria-labelledby="profile-title">
+        <div class="avatar" aria-hidden="true">👤</div>
+        <div><h1 id="profile-title">مسافر سندباد</h1><p>traveler@mysindbad.example</p></div>
+      </section>
+      <h2 class="section-title">نظرة سريعة</h2>
+      <section class="stats" aria-label="إحصائيات الحساب">
+        <div class="stat"><strong id="saved-count">0</strong><span>الرحلات المحفوظة</span></div>
+        <div class="stat"><strong id="favorite-count">0</strong><span>المفضلة</span></div>
+        <div class="stat"><strong id="points-count">0</strong><span>النقاط</span></div>
+      </section>
+      <h2 class="section-title">الإعدادات</h2>
+      <section class="settings" aria-label="إعدادات الحساب">
+        <label class="setting"><span class="setting-info"><span class="setting-icon" aria-hidden="true">文</span>اللغة</span><select id="language" aria-label="اختيار اللغة"><option value="ar">العربية</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="tr">Türkçe</option></select></label>
+        <label class="setting"><span class="setting-info"><span class="setting-icon" aria-hidden="true">¤</span>العملة</span><select id="currency" aria-label="اختيار العملة"><option value="MAD">MAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="SAR">SAR</option></select></label>
+        <div class="setting"><span class="setting-info"><span class="setting-icon" aria-hidden="true">♧</span>الإشعارات</span><button id="notifications" class="toggle" type="button" role="switch" aria-checked="false" aria-label="تفعيل الإشعارات"></button></div>
+      </section>
+      <h2 class="section-title">الرحلات المحفوظة</h2>
+      <section id="saved-trips" class="trips" aria-live="polite"></section>
+      <button id="logout" class="logout" type="button">تسجيل الخروج</button>
+    </section>
+    <nav class="nav" aria-label="التنقل الرئيسي">
+      <a href="./index.html">⌂<span>الرئيسية</span></a><a href="./explore.html">◈<span>استكشف</span></a><a href="./itinerary.html">✈<span>رحلتي</span></a><a href="./map.html">⌖<span>الخريطة</span></a><a href="./profile.html" class="active" aria-current="page">👤<span>حسابي</span></a>
+    </nav>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite">تم حفظ الإعدادات بنجاح</div>
+  <script>
+    const readLocal = (key, fallback) => { try { const value = localStorage.getItem(key); return value === null ? fallback : JSON.parse(value); } catch (error) { return fallback; } };
+    const writeLocal = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch (error) { return false; } };
+    const toast = document.getElementById('toast');
+    let toastTimer;
+    function showToast(message = 'تم حفظ الإعدادات بنجاح') { toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2200); }
+    function normaliseTrips() {
+      const saved = readLocal('savedTrips', []);
+      const trips = Array.isArray(saved) ? saved : [];
+      const current = readLocal('currentTrip', null);
+      if (current && typeof current === 'object' && !trips.some((trip) => JSON.stringify(trip) === JSON.stringify(current))) trips.unshift(current);
+      return trips.filter((trip) => trip && typeof trip === 'object');
+    }
+    function tripName(trip) { return trip.destination || trip.destinationName || trip.city || trip.title || 'رحلة محفوظة'; }
+    function tripDate(trip) { const start = trip.startDate || trip.start || trip.date; return start ? `تاريخ البدء: ${start}` : 'بيانات الرحلة جاهزة للمراجعة'; }
+    function renderTrips() {
+      const trips = normaliseTrips();
+      document.getElementById('saved-count').textContent = trips.length;
+      const container = document.getElementById('saved-trips');
+      if (!trips.length) { container.innerHTML = '<div class="empty">لا توجد رحلات محفوظة بعد.<br>ابدأ بإنشاء رحلة جديدة لتظهر هنا.</div>'; return; }
+      container.innerHTML = trips.map((trip) => `<article class="trip"><div><h3>${escapeHtml(tripName(trip))}</h3><p>${escapeHtml(tripDate(trip))}</p></div><a class="trip-link" href="./itinerary.html">عرض التفاصيل</a></article>`).join('');
+    }
+    function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char])); }
+    const language = document.getElementById('language');
+    const currency = document.getElementById('currency');
+    const notifications = document.getElementById('notifications');
+    language.value = readLocal('userLang', 'ar');
+    currency.value = readLocal('userCurrency', 'MAD');
+    const notificationsEnabled = Boolean(readLocal('notificationsEnabled', false));
+    notifications.classList.toggle('on', notificationsEnabled); notifications.setAttribute('aria-checked', String(notificationsEnabled));
+    language.addEventListener('change', () => { writeLocal('userLang', language.value); showToast(); });
+    currency.addEventListener('change', () => { writeLocal('userCurrency', currency.value); showToast(); });
+    notifications.addEventListener('click', () => { const enabled = !notifications.classList.contains('on'); notifications.classList.toggle('on', enabled); notifications.setAttribute('aria-checked', String(enabled)); writeLocal('notificationsEnabled', enabled); showToast(); });
+    document.getElementById('favorite-count').textContent = Array.isArray(readLocal('favorites', [])) ? readLocal('favorites', []).length : 0;
+    document.getElementById('points-count').textContent = Number(readLocal('points', readLocal('sb_points', 0))) || 0;
+    document.getElementById('logout').addEventListener('click', () => { try { ['sb_session', 'currentTrip', 'currentItinerary', 'myTripActivities'].forEach((key) => localStorage.removeItem(key)); } catch (error) {} window.location.href = './index.html'; });
+    renderTrips();
+  </script>
+</body>
+</html>
