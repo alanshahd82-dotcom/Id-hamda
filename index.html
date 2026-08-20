@@ -1202,7 +1202,9 @@ setInterval(applyDynamicTheme, 60000);
 </script>
 <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').then((registration) => registration.update());
+  });
 }
 </script>
 <script src="./utils/navigation.js"></script>

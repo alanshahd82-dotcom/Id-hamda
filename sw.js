@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-sindbad-v6';
+const CACHE_NAME = 'my-sindbad-v7';
 const APP_SHELL = [
   './',
   './index.html',
@@ -28,6 +28,18 @@ self.addEventListener('fetch', (event) => {
   const requestUrl = new URL(event.request.url);
   if (requestUrl.origin === self.location.origin && requestUrl.pathname.startsWith('/api/')) {
     event.respondWith(fetch(event.request));
+    return;
+  }
+  const shouldRefresh = requestUrl.origin === self.location.origin
+    && ['document', 'script', 'style'].includes(event.request.destination);
+  if (shouldRefresh) {
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        return response;
+      }).catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
+    );
     return;
   }
   event.respondWith(
