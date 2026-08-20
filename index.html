@@ -14,16 +14,37 @@
 <link rel="apple-touch-icon" href="./icons/brand-logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy: {
+            900: '#0A192F',
+            800: '#243b53',
+            700: '#334e68',
+          },
+          gold: {
+            500: '#D4AF37',
+            400: '#ffcc33',
+            600: '#b8941f',
+          },
+        },
+      },
+    },
+  };
+</script>
 <style>
 :root {
   --navy-950: #060e1a;
-  --navy-900: #0b1b33;
-  --navy-800: #102a4e;
-  --navy-700: #173865;
+  --navy-900: #0A192F;
+  --navy-800: #243b53;
+  --navy-700: #334e68;
   --navy-50: #f4f7fb;
-  --gold: #c5a880;
-  --gold-dark: #a8885d;
-  --gold-light: rgba(197, 168, 128, 0.12);
+  --gold: #D4AF37;
+  --gold-dark: #b8941f;
+  --gold-light: rgba(212, 175, 55, 0.12);
   --bg: #fbf9f5;
   --surface: #ffffff;
   --border: #e8ecf2;
@@ -548,7 +569,7 @@ iframe.map { width: 100%; height: 240px; border: 1px solid var(--border); border
   position: relative;
 }
 .bnav button:active { transform: none; }
-.bnav button.on { color: var(--navy-900); font-weight: 700; }
+ .bnav button.on { color: #ffcc33; font-weight: 700; }
 .bnav button.on { background: var(--gold-light); border-radius: var(--radius-md); }
 .bnav button.on::after {
   content: '';
@@ -575,11 +596,12 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
       @media (display-mode: standalone){body{background:var(--bg)}.shell{max-width:520px;box-shadow:none}.install-app{display:none!important}}
        @media (min-width:700px){body{padding:18px 0}.shell{min-height:calc(100dvh - 36px);border-radius:28px;overflow:hidden}}
        /* ترويسة الهوية — ترتيب هادئ وواضح على الهاتف والسطح */
-       .hdr {
+        .hdr {
          min-height: 76px;
          padding-inline: 20px;
-         background: rgba(255,255,255,.96);
-         box-shadow: 0 4px 18px rgba(11,27,51,.045);
+          background: rgba(10,25,47,.94);
+          border-bottom-color: rgba(212,175,55,.3);
+          box-shadow: 0 4px 18px rgba(6,14,26,.18);
        }
        .hdr .brand { gap: .75rem; min-width: 0; }
        .hdr .brand-logo {
@@ -587,7 +609,7 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
          height: 48px;
          border: 1px solid rgba(197,168,128,.32);
          border-radius: 15px;
-         box-shadow: 0 5px 14px rgba(11,27,51,.12);
+          box-shadow: 0 0 0 2px rgba(212,175,55,.28), 0 5px 14px rgba(0,0,0,.2);
        }
        .hdr .brand-copy {
          align-items: flex-start;
@@ -596,10 +618,11 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
        .hdr .brand b {
          font-size: 1.28rem;
          letter-spacing: -.02em;
+          color: #D4AF37;
        }
        .hdr .brand small {
          font-size: .7rem;
-         color: var(--text-muted);
+          color: rgba(255,255,255,.72);
          font-weight: 600;
        }
        .live-indicator {
@@ -625,7 +648,7 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
          overflow: hidden;
          text-overflow: ellipsis;
          white-space: nowrap;
-         color: var(--navy-900);
+          color: #ffffff;
          font-size: .72rem;
          font-weight: 700;
        }
@@ -640,12 +663,15 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
          width: 44px;
          height: 44px;
          border: 1px solid var(--border);
-         background: var(--surface);
-         box-shadow: 0 3px 10px rgba(11,27,51,.05);
+          background: rgba(255,255,255,.08);
+          color: #ffffff;
+          border-color: rgba(255,255,255,.2);
+          box-shadow: 0 3px 10px rgba(0,0,0,.12);
        }
-       .hdr .u > button:last-child:hover {
-         background: var(--danger-light);
-         border-color: #fecaca;
+        .hdr .u > button:last-child:hover {
+          background: rgba(212,175,55,.18);
+          border-color: #D4AF37;
+          color: #ffcc33;
        }
        .service-rail {
          display: flex;
@@ -833,14 +859,14 @@ function doReg(){const name=$('rName').value.trim(),email=$('aEmail').value.trim
 function doOut(){session=null;ls('sb_session',null);render();}
 
 /* ===== الهيكل ===== */
-function appHTML(){return `
- <div class="hdr">
-   <div class="brand">${LOGO}<div class="brand-copy"><b class="en">My Sindbad</b><small>رفيق السفر</small><span class="live-indicator" id="liveIndicator"><i></i><span id="liveStatus">متصل الآن</span><span> · </span><span class="live-time" id="liveClock">--:--</span></span></div></div>
+ function appHTML(){return `
+  <div class="hdr bg-navy-900/90 backdrop-blur-md">
+    <div class="brand">${LOGO}<div class="brand-copy"><b class="en text-gold-500 font-bold text-2xl">My Sindbad</b><small>رفيق السفر</small><span class="live-indicator" id="liveIndicator"><i></i><span id="liveStatus">متصل الآن</span><span> · </span><span class="live-time" id="liveClock">--:--</span></span></div></div>
    <div class="u"><button class="install-app" id="installApp" type="button" onclick="installApp()">تثبيت التطبيق</button><span class="user-name">${esc(session.name||'زائر')}</span><div class="av" aria-label="حساب ${esc(session.name||'زائر')}">${esc((session.name||'ز').charAt(0))}</div><button onclick="doOut()" title="تسجيل الخروج" aria-label="تسجيل الخروج">${ic('out',16)}</button></div>
  </div>
  <div class="content" id="pg"></div>
  <div class="foot"></div>
- <div class="bnav">${NAVB.map(n=>`<button class="${n.id===page?'on':''}" onclick="go('${n.id}')">${ic(n.i,18)}<span>${n.t}</span></button>`).join('')}</div>`;}
+  <div class="bnav bg-navy-900/95">${NAVB.map(n=>`<button class="${n.id===page?'on ':''}text-white hover:text-gold-400 transition-colors duration-300" onclick="go('${n.id}')">${ic(n.i,18)}<span>${n.t}</span></button>`).join('')}</div>`;}
 function go(p){page=p;render();}
 function bind(){const P=$('pg');if(!P)return;({home:pgHome,trip:pgTrip,explore:pgExplore,map:pgMap,community:pgCommunity,bot:pgBot})[page](P);}
 const cityChips=()=>`<div class="row" style="margin-bottom:.85rem">${Object.keys(CITIES).map(c=>`<button class="chip ${c===city?'on':''}" onclick="city='${c}';render()">${CITIES[c].n}</button>`).join('')}</div>`;
@@ -849,7 +875,7 @@ const cityChips=()=>`<div class="row" style="margin-bottom:.85rem">${Object.keys
 function pgHome(P){const t=lg('sb_trip',null);
  P.innerHTML=`
   <div class="home-hero">
-    <span class="greeting">MY SINDBAD · أهلًا ${esc(session.name)}</span>
+        <span class="greeting text-white" id="greeting-text">MY SINDBAD · أهلًا ${esc(session.name)}</span>
    <h2>إلى أين تأخذك الرحلة؟</h2>
    <div class="home-search">
     <input class="inp" id="q" placeholder="ابحث عن مدينة أو وجهة..." onkeydown="if(event.key==='Enter')doSearch()">
