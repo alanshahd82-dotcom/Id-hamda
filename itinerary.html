@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>برنامج الرحلة — My Sindbad</title>
+  <meta name="theme-color" content="#0A192F">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 900: '#0A192F', 800: '#243b53', 700: '#334e68' },
+            gold: { 50: '#fffaf0', 400: '#ffcc33', 500: '#D4AF37', 600: '#b8941f' },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --navy-900: #0A192F;
+      --navy-800: #243b53;
+      --gold: #D4AF37;
+      --gold-dark: #b8941f;
+    }
+    * { box-sizing: border-box; font-family: 'Cairo', system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; background: #060e1a; color: #0c1624; }
+    .shell { width: 100%; max-width: 480px; min-height: 100vh; margin: 0 auto; padding-bottom: calc(88px + env(safe-area-inset-bottom)); background: #fbf9f5; box-shadow: 0 0 60px rgba(0,0,0,.28); }
+    .loading-screen { min-height: 100vh; background: linear-gradient(160deg, #060e1a, #0A192F 58%, #243b53); }
+    .bot-orbit { animation: orbit 2.2s linear infinite; }
+    .bot-pulse { animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes orbit { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%, 100% { opacity: .42; transform: scale(.94); } 50% { opacity: 1; transform: scale(1.04); } }
+    .activity-card { animation: rise .45s ease both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    dialog { border: 0; border-radius: 1.5rem; padding: 0; width: min(92vw, 430px); box-shadow: 0 24px 70px rgba(0,0,0,.3); }
+    dialog::backdrop { background: rgba(6,14,26,.7); backdrop-filter: blur(4px); }
+    .edit-field { width: 100%; border: 2px solid #e5e7eb; border-radius: .75rem; padding: .65rem .8rem; outline: none; }
+    .edit-field:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,.15); }
+    @media (min-width: 700px) { .shell { margin: 22px auto; min-height: calc(100vh - 44px); border-radius: 28px; overflow: hidden; } }
+  </style>
+</head>
+<body>
+  <div id="loading" class="loading-screen flex flex-col items-center justify-center px-6 text-center text-white">
+    <div class="relative mb-7 flex h-28 w-28 items-center justify-center">
+      <div class="bot-orbit absolute inset-0 rounded-full border-2 border-dashed border-gold-500/70"></div>
+      <div class="bot-pulse flex h-20 w-20 items-center justify-center rounded-3xl border border-gold-400/40 bg-white/10 text-4xl shadow-[0_0_35px_rgba(212,175,55,.2)]">🤖</div>
+    </div>
+    <h1 class="text-xl font-extrabold text-gold-400">مساعد سندباد يخطط لرحلتك الآن...</h1>
+    <p class="mt-3 text-sm text-white/65">نرتب لك أياماً مليئة بالتجارب المناسبة لأسلوبك.</p>
+    <div class="mt-7 h-1.5 w-48 overflow-hidden rounded-full bg-white/15"><div class="h-full w-1/2 animate-pulse rounded-full bg-gold-500"></div></div>
+  </div>
+
+  <main id="app" class="shell hidden"></main>
+
+  <dialog id="edit-dialog">
+    <form id="edit-form" class="bg-white p-5" method="dialog">
+      <div class="mb-5 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-gold-600">تعديل النشاط</p>
+          <h2 class="mt-1 text-xl font-extrabold text-navy-900">خصّص برنامجك</h2>
+        </div>
+        <button type="button" id="close-edit" class="rounded-xl bg-gray-100 px-3 py-2 text-lg text-gray-600" aria-label="إغلاق">×</button>
+      </div>
+      <div class="space-y-3">
+        <label class="block text-xs font-bold text-slate-500">الوقت<input id="edit-time" class="edit-field mt-1" required></label>
+        <label class="block text-xs font-bold text-slate-500">المكان<input id="edit-place" class="edit-field mt-1" required></label>
+        <label class="block text-xs font-bold text-slate-500">النشاط<input id="edit-activity" class="edit-field mt-1" required></label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block text-xs font-bold text-slate-500">المسافة<input id="edit-distance" class="edit-field mt-1" required></label>
+          <label class="block text-xs font-bold text-slate-500">المدة<input id="edit-duration" class="edit-field mt-1" required></label>
+        </div>
+      </div>
+      <div class="mt-5 grid grid-cols-2 gap-3">
+        <button type="submit" class="rounded-xl bg-gold-500 px-4 py-3 text-sm font-bold text-white hover:bg-gold-600">حفظ التعديل</button>
+        <button type="button" id="cancel-edit" class="rounded-xl bg-gray-200 px-4 py-3 text-sm font-bold text-gray-700">إلغاء</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const loading = document.getElementById('loading');
+    const app = document.getElementById('app');
+    const editDialog = document.getElementById('edit-dialog');
+    const editForm = document.getElementById('edit-form');
+    let tripData = null;
+    let itinerary = [];
+    let editing = { day: 0, activity: 0 };
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[character]));
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(`${dateString}T12:00:00`);
+      return new Intl.DateTimeFormat('ar-MA', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
+    }
+
+    function addDays(dateString, amount) {
+      const date = new Date(`${dateString}T12:00:00`);
+      date.setDate(date.getDate() + amount);
+      return date.toISOString().split('T')[0];
+    }
+
+    function getDayCount(data) {
+      const start = new Date(`${data.dates.start}T12:00:00`);
+      const end = new Date(`${data.dates.end}T12:00:00`);
+      const days = Math.floor((end - start) / 86400000) + 1;
+      return Math.max(1, Math.min(Number.isFinite(days) ? days : 1, 7));
+    }
+
+    function generateMockItinerary(data) {
+      const destination = data.destination || 'وجهتك';
+      const style = data.travelStyle || 'ثقافي';
+      const templates = {
+        استرخاء: [
+          ['09:00 ص', `شاطئ ${destination}`, 'صباح هادئ على الشاطئ', '15 دقيقة بالسيارة', 'ساعتان'],
+          ['12:30 م', 'مطعم محلي مطل على البحر', 'غداء خفيف وتجربة نكهات محلية', '8 دقائق بالسيارة', 'ساعة ونصف'],
+          ['04:00 م', `سبا ${destination}`, 'جلسة استرخاء وعناية', '12 دقيقة بالسيارة', 'ساعتان']
+        ],
+        مغامرة: [
+          ['08:00 ص', `مسار جبلي في ${destination}`, 'مشي واستكشاف الطبيعة', '20 دقيقة بالسيارة', '3 ساعات'],
+          ['12:30 م', 'مخيم الرحالة', 'غداء في الهواء الطلق', '500 متر مشياً', 'ساعة'],
+          ['04:00 م', 'نقطة الإطلالة', 'غروب مليء بالمغامرة والتصوير', '25 دقيقة بالسيارة', 'ساعتان']
+        ],
+        ثقافي: [
+          ['09:00 ص', `المدينة القديمة في ${destination}`, 'جولة تعريفية بين المعالم', '500 متر مشياً', 'ساعتان'],
+          ['12:30 م', 'مطعم تراثي', 'غداء تقليدي وتجربة محلية', '10 دقائق بالسيارة', 'ساعة ونصف'],
+          ['03:30 م', 'متحف ومعلم تاريخي', 'اكتشاف تاريخ وثقافة المكان', '700 متر مشياً', 'ساعتان']
+        ],
+        عائلي: [
+          ['09:30 ص', 'حديقة العائلة', 'ألعاب وأنشطة مناسبة للجميع', '12 دقيقة بالسيارة', 'ساعتان'],
+          ['01:00 م', 'مطعم عائلي', 'غداء مريح للجميع', '5 دقائق بالسيارة', 'ساعة ونصف'],
+          ['04:00 م', 'مركز ترفيهي', 'وقت ممتع للصغار والكبار', '15 دقيقة بالسيارة', 'ساعتان']
+        ],
+        رومانسي: [
+          ['10:00 ص', 'مقهى بإطلالة', 'فطور هادئ لشخصين', '10 دقائق بالسيارة', 'ساعة ونصف'],
+          ['02:00 م', `أجمل معالم ${destination}`, 'جولة خاصة والتقاط الصور', '15 دقيقة بالسيارة', 'ساعتان'],
+          ['07:00 م', 'مطعم رومانسي', 'عشاء على ضوء الشموع', '8 دقائق بالسيارة', 'ساعتان']
+        ],
+        اقتصادي: [
+          ['09:00 ص', 'ساحة المدينة', 'جولة مجانية بين الشوارع القديمة', '400 متر مشياً', 'ساعتان'],
+          ['12:00 م', 'سوق شعبي', 'غداء وتسوق بأسعار مناسبة', '700 متر مشياً', 'ساعتان'],
+          ['04:00 م', 'حديقة عامة', 'استراحة واستكشاف مجاني', '10 دقائق بالحافلة', 'ساعة ونصف']
+        ]
+      };
+      const selected = templates[style] || templates.ثقافي;
+      return Array.from({ length: getDayCount(data) }, (_, dayIndex) => ({
+        day: dayIndex + 1,
+        date: addDays(data.dates.start, dayIndex),
+        activities: selected.map((item, activityIndex) => ({
+          time: item[0],
+          place: item[1],
+          activity: dayIndex === 0 ? item[2] : item[2].replace('جولة', `جولة اليوم ${dayIndex + 1}`),
+          distance: item[3],
+          duration: item[4],
+          added: false,
+          id: `${dayIndex}-${activityIndex}`
+        }))
+      }));
+    }
+
+    function saveItinerary() {
+      localStorage.setItem('currentItinerary', JSON.stringify(itinerary));
+    }
+
+    function renderActivity(activity, dayIndex, activityIndex) {
+      return `
+        <article class="activity-card rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" style="animation-delay:${activityIndex * 70}ms">
+          <div class="flex gap-3">
+            <div class="min-w-[4.1rem] border-l border-gold-500/30 pl-3 text-center">
+              <span class="block text-sm font-extrabold text-gold-600">${escapeHtml(activity.time)}</span>
+              <span class="mt-2 block text-[.68rem] font-semibold text-slate-400">موعد النشاط</span>
+            </div>
+            <div class="min-w-0 flex-1">
+              <h3 class="text-base font-extrabold text-navy-900">${escapeHtml(activity.place)}</h3>
+              <p class="mt-1 text-sm font-semibold leading-6 text-slate-700">${escapeHtml(activity.activity)}</p>
+              <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[.7rem] text-slate-500">
+                <span>⌖ ${escapeHtml(activity.distance)}</span><span>◷ ${escapeHtml(activity.duration)}</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex gap-2 border-t border-slate-100 pt-3">
+            <button type="button" data-add="${dayIndex}:${activityIndex}" class="flex-1 rounded-xl px-3 py-2 text-xs font-bold transition ${activity.added ? 'bg-emerald-50 text-emerald-700' : 'bg-gold-500 text-white hover:bg-gold-600'}">${activity.added ? '✓ تمت الإضافة' : 'أضف إلى رحلتي ➕'}</button>
+            <button type="button" data-edit="${dayIndex}:${activityIndex}" class="rounded-xl bg-slate-100 px-4 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-200">تعديل ✏️</button>
+          </div>
+        </article>`;
+    }
+
+    function render() {
+      const totalBudget = tripData.budget && Number(tripData.budget.amount);
+      const estimatedSpend = itinerary.length * 180;
+      const remaining = totalBudget ? Math.max(0, totalBudget - estimatedSpend) : null;
+      app.innerHTML = `
+        <header class="sticky top-0 z-20 flex min-h-[76px] items-center justify-between border-b border-gold-500/30 bg-navy-900/95 px-5 py-3 text-white shadow-lg backdrop-blur-md">
+          <a href="./index.html" class="flex items-center gap-3 no-underline">
+            <img src="./icons/brand-logo.jpg" alt="شعار My Sindbad" class="h-12 w-12 rounded-2xl border border-gold-500/40 object-cover shadow-[0_0_0_2px_rgba(212,175,55,.2)]">
+            <span><strong class="en block text-2xl font-bold leading-tight text-gold-500">My Sindbad</strong><small class="block text-xs font-semibold text-white/70">رفيق السفر</small></span>
+          </a>
+          <a href="./index.html" class="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white transition hover:border-gold-500 hover:text-gold-400">الرئيسية</a>
+        </header>
+        <section class="px-4 pb-6 pt-6 sm:px-5">
+          <div class="mb-5">
+            <p class="mb-1 text-xs font-bold tracking-wide text-gold-600">MY SINDBAD · برنامجك الذكي</p>
+            <h1 class="text-2xl font-extrabold leading-relaxed text-navy-900">برنامج رحلة ${escapeHtml(tripData.destination)}</h1>
+            <p class="mt-1 text-sm leading-7 text-slate-500">خطة يومية مقترحة بأسلوب ${escapeHtml(tripData.travelStyle || 'متنوع')}، ويمكنك تعديلها كما تحب.</p>
+          </div>
+          <div class="mb-6 grid grid-cols-3 gap-2 rounded-2xl bg-navy-900 p-3 text-white shadow-lg">
+            <div class="border-l border-white/15 px-2 text-center"><span class="block text-[.66rem] text-white/60">الوجهة</span><strong class="mt-1 block truncate text-sm text-gold-400">${escapeHtml(tripData.destination)}</strong></div>
+            <div class="border-l border-white/15 px-2 text-center"><span class="block text-[.66rem] text-white/60">عدد الأيام</span><strong class="mt-1 block text-sm">${itinerary.length} أيام</strong></div>
+            <div class="px-2 text-center"><span class="block text-[.66rem] text-white/60">المتبقي تقريباً</span><strong class="mt-1 block truncate text-sm text-gold-400">${remaining === null ? 'غير محدد' : `${remaining} ${escapeHtml(tripData.budget.currency || '')}`}</strong></div>
+          </div>
+          <div class="mb-3 flex items-center justify-between"><h2 class="text-lg font-extrabold text-navy-900">برنامج يوم بيوم</h2><span class="rounded-full bg-gold-50 px-3 py-1 text-[.68rem] font-bold text-gold-600">اقتراح ذكي</span></div>
+          <div class="space-y-6">
+            ${itinerary.map((day) => `<section><div class="mb-3 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gold-500 text-sm font-extrabold text-white">${day.day}</span><h3 class="text-sm font-extrabold text-navy-900">اليوم ${['الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع'][day.day - 1] || day.day}: <span class="font-semibold text-slate-500">${formatDate(day.date)}</span></h3></div><div class="space-y-3">${day.activities.map((activity, index) => renderActivity(activity, day.day - 1, index)).join('')}</div></section>`).join('')}
+          </div>
+          <a href="./create-trip.html" class="mt-7 flex min-h-12 items-center justify-center rounded-xl border-2 border-navy-900 px-4 py-3 text-sm font-bold text-navy-900 transition hover:bg-navy-900 hover:text-white">تعديل بيانات الرحلة</a>
+        </section>
+        <nav class="fixed bottom-0 left-1/2 z-30 flex w-full max-w-[480px] -translate-x-1/2 border-t border-white/10 bg-navy-900/95 px-2 py-2 pb-[calc(.5rem+env(safe-area-inset-bottom))] text-white shadow-[0_-4px_18px_rgba(0,0,0,.16)] backdrop-blur-xl" aria-label="التنقل الرئيسي">
+          <a href="./index.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">⌂<span>الرئيسية</span></a>
+          <a href="./index.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">◈<span>استكشف</span></a>
+          <a href="./itinerary.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl bg-gold-500/15 text-[.65rem] font-bold text-gold-400">✈<span>رحلتي</span></a>
+          <a href="./index.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">⌖<span>الخريطة</span></a>
+          <a href="./index.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">◌<span>المساعد</span></a>
+        </nav>`;
+      app.querySelectorAll('[data-add]').forEach((button) => button.addEventListener('click', () => {
+        const [dayIndex, activityIndex] = button.dataset.add.split(':').map(Number);
+        const activity = itinerary[dayIndex].activities[activityIndex];
+        activity.added = true;
+        const saved = JSON.parse(localStorage.getItem('myTripActivities') || '[]');
+        if (!saved.some((item) => item.id === activity.id)) saved.push({ ...activity, day: itinerary[dayIndex].day, date: itinerary[dayIndex].date });
+        localStorage.setItem('myTripActivities', JSON.stringify(saved));
+        saveItinerary();
+        render();
+      }));
+      app.querySelectorAll('[data-edit]').forEach((button) => button.addEventListener('click', () => {
+        const [dayIndex, activityIndex] = button.dataset.edit.split(':').map(Number);
+        openEditor(dayIndex, activityIndex);
+      }));
+    }
+
+    function openEditor(dayIndex, activityIndex) {
+      editing = { day: dayIndex, activity: activityIndex };
+      const activity = itinerary[dayIndex].activities[activityIndex];
+      document.getElementById('edit-time').value = activity.time;
+      document.getElementById('edit-place').value = activity.place;
+      document.getElementById('edit-activity').value = activity.activity;
+      document.getElementById('edit-distance').value = activity.distance;
+      document.getElementById('edit-duration').value = activity.duration;
+      editDialog.showModal();
+    }
+
+    editForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const activity = itinerary[editing.day].activities[editing.activity];
+      activity.time = document.getElementById('edit-time').value.trim();
+      activity.place = document.getElementById('edit-place').value.trim();
+      activity.activity = document.getElementById('edit-activity').value.trim();
+      activity.distance = document.getElementById('edit-distance').value.trim();
+      activity.duration = document.getElementById('edit-duration').value.trim();
+      saveItinerary();
+      editDialog.close();
+      render();
+    });
+    document.getElementById('close-edit').addEventListener('click', () => editDialog.close());
+    document.getElementById('cancel-edit').addEventListener('click', () => editDialog.close());
+
+    window.setTimeout(() => {
+      try {
+        tripData = JSON.parse(localStorage.getItem('currentTrip'));
+      } catch (error) {
+        tripData = null;
+      }
+      if (!tripData || !tripData.destination || !tripData.dates || !tripData.dates.start) {
+        window.location.href = './create-trip.html';
+        return;
+      }
+      try {
+        const savedItinerary = JSON.parse(localStorage.getItem('currentItinerary'));
+        itinerary = Array.isArray(savedItinerary) && savedItinerary.length ? savedItinerary : generateMockItinerary(tripData);
+      } catch (error) {
+        itinerary = generateMockItinerary(tripData);
+      }
+      saveItinerary();
+      loading.classList.add('hidden');
+      app.classList.remove('hidden');
+      render();
+    }, 2500);
+  </script>
+</body>
+</html>
