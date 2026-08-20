@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>إنشاء رحلة — My Sindbad</title>
+  <meta name="theme-color" content="#0A192F">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 900: '#0A192F', 800: '#243b53', 700: '#334e68' },
+            gold: { 50: '#fffaf0', 400: '#ffcc33', 500: '#D4AF37', 600: '#b8941f' },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --navy-900: #0A192F;
+      --navy-800: #243b53;
+      --gold: #D4AF37;
+      --gold-dark: #b8941f;
+      --gold-light: rgba(212, 175, 55, .12);
+    }
+    * { box-sizing: border-box; font-family: 'Cairo', system-ui, sans-serif; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #060e1a;
+      color: #0c1624;
+    }
+    .shell {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding-bottom: calc(86px + env(safe-area-inset-bottom));
+      background: #fbf9f5;
+      box-shadow: 0 0 60px rgba(0,0,0,.28);
+    }
+    .form-card {
+      border: 1px solid #e8ecf2;
+      box-shadow: 0 8px 24px rgba(11,27,51,.06);
+    }
+    .field {
+      width: 100%;
+      min-height: 48px;
+      border: 2px solid #e5e7eb;
+      border-radius: .75rem;
+      background: #fff;
+      padding: .75rem 1rem;
+      color: #0c1624;
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .field:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212,175,55,.15);
+    }
+    .choice-card, .pref-chip { transition: border-color .2s ease, background-color .2s ease, transform .2s ease; }
+    .choice-card:has(input:checked), .pref-chip:has(input:checked) {
+      border-color: var(--gold);
+      background: #fffaf0;
+      box-shadow: 0 0 0 1px rgba(212,175,55,.25);
+    }
+    .choice-card:active, .pref-chip:active { transform: scale(.98); }
+    .success-message { display: none; }
+    .success-message.show { display: block; animation: appear .3s ease both; }
+    @keyframes appear { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (min-width: 700px) {
+      .shell { margin: 22px auto; min-height: calc(100vh - 44px); border-radius: 28px; overflow: hidden; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="sticky top-0 z-20 flex min-h-[76px] items-center justify-between border-b border-gold-500/30 bg-navy-900/95 px-5 py-3 text-white shadow-lg backdrop-blur-md">
+      <a href="./index.html" class="flex items-center gap-3 no-underline">
+        <img src="./icons/brand-logo.jpg" alt="شعار My Sindbad" class="h-12 w-12 rounded-2xl border border-gold-500/40 object-cover shadow-[0_0_0_2px_rgba(212,175,55,.2)]">
+        <span>
+          <strong class="en block text-2xl font-bold leading-tight text-gold-500">My Sindbad</strong>
+          <small class="block text-xs font-semibold text-white/70">رفيق السفر</small>
+        </span>
+      </a>
+      <a href="./index.html" class="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white transition hover:border-gold-500 hover:text-gold-400">الرئيسية</a>
+    </header>
+
+    <section class="px-4 pb-6 pt-6 sm:px-5">
+      <div class="mb-5">
+        <p class="mb-1 text-xs font-bold tracking-wide text-gold-600">MY SINDBAD · خطوتك الأولى</p>
+        <h1 class="text-2xl font-extrabold leading-relaxed text-navy-900">أنشئ رحلة تناسبك</h1>
+        <p class="mt-1 text-sm leading-7 text-slate-500">أخبرنا بما تحلم به، وسنساعدك على بناء برنامج سفر مميز.</p>
+      </div>
+
+      <form id="trip-form" class="form-card space-y-6 rounded-3xl bg-white p-4 sm:p-5">
+        <div>
+          <label for="destination" class="mb-2 block text-sm font-bold text-navy-900">الوجهة</label>
+          <div class="relative">
+            <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-lg" aria-hidden="true">📍</span>
+            <input id="destination" name="destination" required autocomplete="off" placeholder="إلى أين تريد السفر؟" class="field w-full rounded-lg border-2 border-gray-200 px-4 py-3 pr-11 focus:border-gold-500 focus:outline-none">
+          </div>
+        </div>
+
+        <fieldset>
+          <legend class="mb-2 block text-sm font-bold text-navy-900">التواريخ</legend>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="text-xs font-semibold text-slate-500">من
+              <input id="start-date" name="startDate" type="date" required class="field mt-2 w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-sm focus:border-gold-500 focus:outline-none">
+            </label>
+            <label class="text-xs font-semibold text-slate-500">إلى
+              <input id="end-date" name="endDate" type="date" required class="field mt-2 w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-sm focus:border-gold-500 focus:outline-none">
+            </label>
+          </div>
+        </fieldset>
+
+        <div>
+          <label for="travelers" class="mb-2 block text-sm font-bold text-navy-900">عدد المسافرين</label>
+          <div class="relative">
+            <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-lg" aria-hidden="true">👥</span>
+            <input id="travelers" name="travelers" type="number" min="1" value="1" required class="field w-full rounded-lg border-2 border-gray-200 px-4 py-3 pr-11 focus:border-gold-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-bold text-navy-900">الميزانية التقريبية</label>
+          <div class="grid grid-cols-[1fr_7.5rem] gap-3">
+            <input id="budget" name="budget" type="number" min="0" step="1" placeholder="مثال: 1500" class="field w-full rounded-lg border-2 border-gray-200 px-4 py-3 focus:border-gold-500 focus:outline-none">
+            <select id="currency" name="currency" class="field w-full rounded-lg border-2 border-gray-200 px-3 py-3 focus:border-gold-500 focus:outline-none">
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="MAD" selected>MAD</option>
+              <option value="SAR">SAR</option>
+              <option value="AED">AED</option>
+              <option value="GBP">GBP</option>
+              <option value="TRY">TRY</option>
+            </select>
+          </div>
+        </div>
+
+        <fieldset>
+          <legend class="mb-3 block text-sm font-bold text-navy-900">نمط السفر</legend>
+          <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <label class="choice-card cursor-pointer rounded-2xl border-2 border-gray-200 bg-white p-3 text-center peer-checked:border-gold-500 peer-checked:bg-gold-50">
+              <input type="radio" name="travelStyle" value="مغامرة" class="peer sr-only" required>
+              <span class="block text-2xl" aria-hidden="true">🏔️</span><span class="mt-1 block text-xs font-bold text-slate-700">مغامرة</span>
+            </label>
+            <label class="choice-card cursor-pointer rounded-2xl border-2 border-gray-200 bg-white p-3 text-center peer-checked:border-gold-500 peer-checked:bg-gold-50">
+              <input type="radio" name="travelStyle" value="استرخاء" class="peer sr-only">
+              <span class="block text-2xl" aria-hidden="true">🏖️</span><span class="mt-1 block text-xs font-bold text-slate-700">استرخاء</span>
+            </label>
+            <label class="choice-card cursor-pointer rounded-2xl border-2 border-gray-200 bg-white p-3 text-center peer-checked:border-gold-500 peer-checked:bg-gold-50">
+              <input type="radio" name="travelStyle" value="ثقافي" class="peer sr-only">
+              <span class="block text-2xl" aria-hidden="true">🏛️</span><span class="mt-1 block text-xs font-bold text-slate-700">ثقافي</span>
+            </label>
+            <label class="choice-card cursor-pointer rounded-2xl border-2 border-gray-200 bg-white p-3 text-center peer-checked:border-gold-500 peer-checked:bg-gold-50">
+              <input type="radio" name="travelStyle" value="عائلي" class="peer sr-only">
+              <span class="block text-2xl" aria-hidden="true">👩‍👧</span><span class="mt-1 block text-xs font-bold text-slate-700">عائلي</span>
+            </label>
+            <label class="choice-card cursor-pointer rounded-2xl border-2 border-gray-200 bg-white p-3 text-center peer-checked:border-gold-500 peer-checked:bg-gold-50">
+              <input type="radio" name="travelStyle" value="رومانسي" class="peer sr-only">
+              <span class="block text-2xl" aria-hidden="true">💑</span><span class="mt-1 block text-xs font-bold text-slate-700">رومانسي</span>
+            </label>
+            <label class="choice-card cursor-pointer rounded-2xl border-2 border-gray-200 bg-white p-3 text-center peer-checked:border-gold-500 peer-checked:bg-gold-50">
+              <input type="radio" name="travelStyle" value="اقتصادي" class="peer sr-only">
+              <span class="block text-2xl" aria-hidden="true">💰</span><span class="mt-1 block text-xs font-bold text-slate-700">اقتصادي</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="mb-3 block text-sm font-bold text-navy-900">التفضيلات</legend>
+          <div class="flex flex-wrap gap-2">
+            <label class="pref-chip cursor-pointer rounded-full border-2 border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-50"><input type="checkbox" name="preferences" value="فنادق فاخرة" class="peer sr-only">فنادق فاخرة</label>
+            <label class="pref-chip cursor-pointer rounded-full border-2 border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-50"><input type="checkbox" name="preferences" value="مطاعم محلية" class="peer sr-only">مطاعم محلية</label>
+            <label class="pref-chip cursor-pointer rounded-full border-2 border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-50"><input type="checkbox" name="preferences" value="أنشطة خارجية" class="peer sr-only">أنشطة خارجية</label>
+            <label class="pref-chip cursor-pointer rounded-full border-2 border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-50"><input type="checkbox" name="preferences" value="تسوق" class="peer sr-only">تسوق</label>
+            <label class="pref-chip cursor-pointer rounded-full border-2 border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-50"><input type="checkbox" name="preferences" value="متاحف ومعالم" class="peer sr-only">متاحف ومعالم</label>
+            <label class="pref-chip cursor-pointer rounded-full border-2 border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 peer-checked:border-gold-500 peer-checked:bg-gold-50"><input type="checkbox" name="preferences" value="حياة ليلية" class="peer sr-only">حياة ليلية</label>
+          </div>
+        </fieldset>
+
+        <div id="success-message" class="success-message rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-center text-sm font-bold text-emerald-700" role="status" aria-live="polite">
+          تم إنشاء رحلتك بنجاح! جاري بناء البرنامج...
+        </div>
+        <div id="form-error" class="hidden rounded-2xl border border-red-200 bg-red-50 p-3 text-center text-sm font-semibold text-red-700" role="alert"></div>
+        <div class="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-2">
+          <button type="submit" class="min-h-12 rounded-xl bg-gold-500 px-4 py-3 text-sm font-extrabold text-white shadow-lg shadow-gold-500/20 transition hover:bg-gold-600 focus:outline-none focus:ring-4 focus:ring-gold-500/20">إنشاء الرحلة بالذكاء الاصطناعي</button>
+          <a href="./index.html" class="flex min-h-12 items-center justify-center rounded-xl bg-gray-200 px-4 py-3 text-sm font-bold text-gray-700 transition hover:bg-gray-300">إلغاء</a>
+        </div>
+      </form>
+    </section>
+
+    <nav class="fixed bottom-0 left-1/2 z-30 flex w-full max-w-[480px] -translate-x-1/2 border-t border-white/10 bg-navy-900/95 px-2 py-2 pb-[calc(.5rem+env(safe-area-inset-bottom))] text-white shadow-[0_-4px_18px_rgba(0,0,0,.16)] backdrop-blur-xl" aria-label="التنقل الرئيسي">
+      <a href="./index.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">⌂<span>الرئيسية</span></a>
+      <a href="./index.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">◈<span>استكشف</span></a>
+      <a href="./create-trip.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl bg-gold-500/15 text-[.65rem] font-bold text-gold-400">✈<span>رحلتي</span></a>
+      <a href="./index.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">⌖<span>الخريطة</span></a>
+      <a href="./index.html" class="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[.65rem] text-white/70 transition hover:text-gold-400">◌<span>المساعد</span></a>
+    </nav>
+  </main>
+
+  <script>
+    const form = document.getElementById('trip-form');
+    const startDate = document.getElementById('start-date');
+    const endDate = document.getElementById('end-date');
+    const successMessage = document.getElementById('success-message');
+    const formError = document.getElementById('form-error');
+
+    const today = new Date().toISOString().split('T')[0];
+    startDate.min = today;
+    endDate.min = today;
+    startDate.addEventListener('change', () => { endDate.min = startDate.value || today; });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      formError.classList.add('hidden');
+      if (endDate.value < startDate.value) {
+        formError.textContent = 'يرجى اختيار تاريخ عودة يساوي أو يتجاوز تاريخ الذهاب.';
+        formError.classList.remove('hidden');
+        return;
+      }
+
+      const data = new FormData(form);
+      const trip = {
+        destination: data.get('destination').trim(),
+        dates: { start: data.get('startDate'), end: data.get('endDate') },
+        travelers: Number(data.get('travelers')),
+        budget: { amount: data.get('budget') ? Number(data.get('budget')) : null, currency: data.get('currency') },
+        travelStyle: data.get('travelStyle'),
+        preferences: data.getAll('preferences'),
+        createdAt: new Date().toISOString(),
+      };
+      localStorage.setItem('currentTrip', JSON.stringify(trip));
+      successMessage.classList.add('show');
+      form.querySelector('button[type="submit"]').disabled = true;
+      window.setTimeout(() => { window.location.href = './index.html'; }, 2000);
+    });
+  </script>
+</body>
+</html>

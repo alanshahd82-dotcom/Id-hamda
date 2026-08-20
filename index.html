@@ -899,7 +899,7 @@ function pgHome(P){const t=lg('sb_trip',null);
    <div class="es-icon">${ic('plane',22)}</div>
    <h3>ابدأ رحلتك القادمة</h3>
    <p>أنشئ خطة سفر مخصصة، وأضف الأيام والمهام التي تهمك.</p>
-   <button class="btn navy sm" onclick="go('trip')">إنشاء رحلة</button>
+   <a class="btn navy sm" href="./create-trip.html">إنشاء رحلة</a>
   </div>`}
    
    <div class="destination-grid">
@@ -1151,7 +1151,7 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
       <button class="cat" onclick="go('trip')"><span class="ci">${ic('cal',18)}</span>رحلتي</button>
     </div>
     <div class="sec">رحلتي الحالية</div>
-     ${t ? `<div class="trip-summary"><div><h2>${esc(t.destinationName || t.city || 'وجهتك')}</h2><p>${esc(t.from)} ← ${esc(t.to)}</p></div><button class="btn sm ghost" onclick="go('trip')">عرض الخطة</button></div>` : `<div class="empty-state"><div class="es-icon">${ic('plane',22)}</div><h3>لم تنشئ رحلة بعد</h3><button class="btn navy sm" onclick="go('trip')">إنشاء رحلة</button></div>`}
+     ${t ? `<div class="trip-summary"><div><h2>${esc(t.destinationName || t.city || 'وجهتك')}</h2><p>${esc(t.from)} ← ${esc(t.to)}</p></div><button class="btn sm ghost" onclick="go('trip')">عرض الخطة</button></div>` : `<div class="empty-state"><div class="es-icon">${ic('plane',22)}</div><h3>لم تنشئ رحلة بعد</h3><a class="btn navy sm" href="./create-trip.html">إنشاء رحلة</a></div>`}
      <div class="card" style="margin-top:1rem"><b style="color:var(--navy-900)">خدمات مباشرة</b></div>`;
  }
  function doSearch() {
