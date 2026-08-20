@@ -147,7 +147,8 @@
     status('تعذر تحميل الخريطة. تحقق من الاتصال ثم أعد تحميل الصفحة.');
     $('search').addEventListener('submit', (event) => { event.preventDefault(); status('الخريطة غير متاحة حالياً.'); });
   } else {
-    map = L.map(mapElement, { zoomControl: true, preferCanvas: true }).setView([31.7917, -7.0926], 6);
+     map = L.map(mapElement, { zoomControl: false, preferCanvas: true }).setView([33.5731, -7.5898], 13);
+     L.control.zoom({ position: 'bottomright' }).addTo(map);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors', maxZoom: 19, crossOrigin: true }).addTo(map);
     map.on('tileerror', () => status('تعذر تحميل بعض أجزاء الخريطة. تحقق من الاتصال.'));
     setTimeout(() => map.invalidateSize(), 120);

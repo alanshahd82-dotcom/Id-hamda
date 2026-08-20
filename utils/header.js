@@ -1,12 +1,4 @@
 (function initSharedHeader() {
-  const taglines = [
-    'رفيقك لاكتشاف العالم',
-    'سافر بذكاء مع سندباد',
-    'رحلاتك أحلامنا',
-    'اكتشف العالم معنا',
-    'وجهتك تبدأ من هنا'
-  ];
-
   const logo = `
     <svg class="site-header__logo" width="150" height="40" viewBox="0 0 150 40" role="img" aria-labelledby="siteLogoTitle">
       <title id="siteLogoTitle">My Sindbad</title>
@@ -23,7 +15,7 @@
       <header class="site-header" id="mainHeader">
         <div class="site-header__inner">
           <a class="site-header__brand" href="./index.html" aria-label="My Sindbad - الرئيسية">${logo}</a>
-          <span class="site-header__tagline" id="rotatingTagline" aria-live="polite">${taglines[0]}</span>
+          <a class="site-header__home" href="./index.html">الرئيسية</a>
         </div>
       </header>`;
   }
@@ -31,17 +23,6 @@
   function setScrolledState() {
     const header = document.getElementById('mainHeader');
     if (header) header.classList.toggle('is-scrolled', window.scrollY > 50);
-  }
-
-  function rotateTagline() {
-    const element = document.getElementById('rotatingTagline');
-    if (!element) return;
-    element.classList.add('is-fading');
-    window.setTimeout(() => {
-      const currentIndex = taglines.indexOf(element.textContent);
-      element.textContent = taglines[(currentIndex + 1) % taglines.length];
-      element.classList.remove('is-fading');
-    }, 300);
   }
 
   function mount() {
@@ -57,7 +38,7 @@
   function start() {
     mount();
     window.addEventListener('scroll', setScrolledState, { passive: true });
-    window.setInterval(rotateTagline, 4000);
+    new MutationObserver(mount).observe(document.body, { childList: true, subtree: true });
   }
 
   if (document.readyState === 'loading') {
