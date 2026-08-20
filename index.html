@@ -751,6 +751,14 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
       </style>
 </head>
 <body>
+<div id="splashScreen" class="fixed inset-0 bg-navy-900 z-[100] flex items-center justify-center" aria-label="جاري تحميل My Sindbad">
+  <svg width="200" height="60" viewBox="0 0 160 40" class="drop-shadow-lg animate-pulse" role="img" aria-label="My Sindbad">
+    <path d="M8 28 Q12 22, 16 28 L22 34 L10 34 Z" fill="#D4AF37"/>
+    <path d="M16 8 L16 26 L28 20 Z" fill="#D4AF37"/>
+    <text x="35" y="22" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#D4AF37">My Sindbad</text>
+    <text x="35" y="34" font-family="Arial, sans-serif" font-size="9" fill="#ffffff">رفيق السفر</text>
+  </svg>
+</div>
 <div class="shell" id="shell"></div>
 <script src="./utils/timeUtils.js"></script>
 <script>
@@ -1170,6 +1178,7 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
    if (!destination || !from || !to || new Date(to) < new Date(from)) { alert('اختر وجهة وتواريخ صحيحة.'); return; }
    ls('sb_trip', { city: destination.name, destinationName: destination.name, from, to, days: [], check: ['جواز السفر','تذاكر السفر','حجز الفندق','تأمين السفر','شاحن الهاتف'].map((t) => ({t, done:false})) });
    render();
+  window.setTimeout(() => document.getElementById('splashScreen')?.remove(), 650);
  }
  function addItem() { const t=lg('sb_trip',null); const title=$('iTitle')?.value.trim(); if(!t||!title)return; t.days[+$('iDay').value].push({title,time:$('iTime').value,type:$('iType').value}); ls('sb_trip',t); render(); }
  function delItem(d,ix) { const t=lg('sb_trip',null); if(!t)return; t.days[d].splice(ix,1); ls('sb_trip',t); render(); }

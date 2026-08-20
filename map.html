@@ -55,6 +55,7 @@
   let line = null;
   let mode = 'driving';
   let searchController = null;
+  let reverseController = null;
   const icon = window.L ? L.divIcon({ className: '', html: '<div class="marker"></div>', iconSize: [22, 22], iconAnchor: [11, 22] }) : null;
 
   function status(message) { $('status').textContent = message; }
@@ -124,6 +125,27 @@
     map.setView([place.lat, place.lon], Math.max(map.getZoom(), 13));
     routeTo();
   }
+  async function nameMapPoint(lat, lon) {
+    if (reverseController) reverseController.abort();
+    reverseController = new AbortController();
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&accept-language=ar,en`, {
+        signal: reverseController.signal,
+        headers: { Accept: 'application/json' }
+      });
+      if (!response.ok) throw new Error('reverse_failed');
+      const result = await response.json();
+      const label = result.display_name || result.address?.road || result.address?.city;
+      if (label && selected && selected.lat === lat && selected.lon === lon) {
+        selected.name = label;
+        $('name').textContent = label;
+        if (marker) marker.bindPopup(label).openPopup();
+        status(`تم تحديد ${label}.`);
+      }
+    } catch (error) {
+      if (error.name !== 'AbortError') status('تم تحديد الموقع، وتعذر جلب اسمه التفصيلي.');
+    }
+  }
   async function searchPlace(query) {
     if (query.length < 2) { status('اكتب اسم مكان أو مدينة للبحث.'); return; }
     if (searchController) searchController.abort();
@@ -157,7 +179,7 @@
     $('locate').addEventListener('click', () => { if (!navigator.geolocation) { status('الموقع الجغرافي غير متاح في هذا المتصفح.'); return; } status('جارٍ تحديد موقعك...'); map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true }); });
     map.on('locationfound', (event) => { user = event.latlng; if (userMarker) map.removeLayer(userMarker); userMarker = L.marker(event.latlng, { icon }).addTo(map).bindPopup('موقعك الحالي'); status('تم تحديد موقعك الحالي.'); if (selected) routeTo(); });
     map.on('locationerror', () => status('لم نتمكن من الوصول إلى موقعك. يمكنك البحث يدوياً.'));
-    map.on('click', (event) => choose({ name: 'المكان المحدد على الخريطة', lat: event.latlng.lat, lon: event.latlng.lng }));
+     map.on('click', (event) => { const point = { name: 'جارٍ تحديد اسم المكان...', lat: event.latlng.lat, lon: event.latlng.lng }; choose(point); nameMapPoint(point.lat, point.lon); });
   }
   $('add').addEventListener('click', () => {
     if (!selected) { status('اختر مكاناً أولاً لإضافته إلى رحلتك.'); return; }

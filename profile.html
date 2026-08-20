@@ -102,13 +102,17 @@
       return trips.filter((trip) => trip && typeof trip === 'object');
     }
     function tripName(trip) { return trip.destination || trip.destinationName || trip.city || trip.title || 'رحلة محفوظة'; }
-    function tripDate(trip) { const start = trip.startDate || trip.start || trip.date; return start ? `تاريخ البدء: ${start}` : 'بيانات الرحلة جاهزة للمراجعة'; }
+    function tripDate(trip) { const start = trip.startDate || trip.start || trip.date || trip.dates?.start; return start ? `تاريخ البدء: ${start}` : 'بيانات الرحلة جاهزة للمراجعة'; }
     function renderTrips() {
       const trips = normaliseTrips();
-      document.getElementById('saved-count').textContent = trips.length;
+      const activities = readLocal('myTripActivities', []);
+      const savedActivities = Array.isArray(activities) ? activities.filter((activity) => activity && typeof activity === 'object') : [];
+      document.getElementById('saved-count').textContent = trips.length + savedActivities.length;
       const container = document.getElementById('saved-trips');
-      if (!trips.length) { container.innerHTML = '<div class="empty">لا توجد رحلات محفوظة بعد.<br>ابدأ بإنشاء رحلة جديدة لتظهر هنا.</div>'; return; }
-      container.innerHTML = trips.map((trip) => `<article class="trip"><div><h3>${escapeHtml(tripName(trip))}</h3><p>${escapeHtml(tripDate(trip))}</p></div><a class="trip-link" href="./itinerary.html">عرض التفاصيل</a></article>`).join('');
+      if (!trips.length && !savedActivities.length) { container.innerHTML = '<div class="empty">لا توجد رحلات محفوظة بعد.<br>ابدأ بإنشاء رحلة جديدة لتظهر هنا.</div>'; return; }
+      const tripCards = trips.map((trip) => `<article class="trip"><div><h3>${escapeHtml(tripName(trip))}</h3><p>${escapeHtml(tripDate(trip))}</p></div><a class="trip-link" href="./itinerary.html">عرض التفاصيل</a></article>`);
+      const activityCards = savedActivities.map((activity) => `<article class="trip"><div><h3>${escapeHtml(activity.title || activity.place || 'نشاط محفوظ')}</h3><p>لديك نشاط محفوظ في رحلتك</p></div><a class="trip-link" href="./itinerary.html">عرض التفاصيل</a></article>`);
+      container.innerHTML = tripCards.concat(activityCards).join('');
     }
     function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char])); }
     const language = document.getElementById('language');
