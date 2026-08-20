@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>الخريطة — My Sindbad</title>
+  <meta name="theme-color" content="#0A192F">
+  <link rel="icon" type="image/jpeg" href="./icons/brand-logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
+  <style>
+    :root{--navy:#0A192F;--gold:#D4AF37;--dark:#b8941f;--bg:#fbf9f5;--line:#e8ecf2}
+    *{box-sizing:border-box;font-family:Cairo,system-ui,sans-serif}body{margin:0;min-height:100vh;background:#060e1a;color:#0c1624}
+    .shell{width:100%;max-width:480px;min-height:100vh;margin:auto;padding-bottom:calc(86px + env(safe-area-inset-bottom));background:var(--bg);box-shadow:0 0 60px #0005}
+    .header{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;min-height:76px;padding:calc(14px + env(safe-area-inset-top)) 18px 12px;background:#0a192ff7;border-bottom:1px solid #d4af374d;color:#fff}
+    .brand{display:flex;align-items:center;gap:.7rem;color:#fff;text-decoration:none}.brand img{width:46px;height:46px;border-radius:14px;border:1px solid #d4af3770;object-fit:cover}.brand b{display:block;color:var(--gold);font:700 1.2rem 'Playfair Display',Georgia,serif}.brand small{display:block;color:#fffb;font-size:.65rem}
+    .content{padding:18px}.intro p{margin:0;color:var(--dark);font-size:.68rem;font-weight:800}.intro h1{margin:.25rem 0 14px;color:var(--navy);font-size:1.45rem;font-weight:800}
+    .map-wrap{position:relative;z-index:1;overflow:hidden;border:2px solid var(--gold);border-radius:18px;box-shadow:0 12px 28px #0b1b5124}#map{height:70vh;min-height:420px;max-height:610px}
+    .search{position:absolute;z-index:500;top:12px;right:12px;left:12px;display:flex;gap:7px;padding:6px;background:#fffffff2;border:1px solid #d4af3780;border-radius:14px;box-shadow:0 8px 22px #06101c2e}.search input{width:100%;min-height:40px;padding:0 .7rem;border:0;outline:0;background:transparent;color:var(--navy);font-size:.8rem}.search button,.locate{display:grid;place-items:center;min-width:42px;min-height:40px;border:0;border-radius:10px;background:var(--navy);color:#fff;cursor:pointer;font-weight:800}.locate{position:absolute;z-index:500;bottom:14px;left:14px;border:2px solid #fff;background:var(--dark);box-shadow:0 4px 14px #0004}
+    .modes{display:flex;gap:8px;margin:12px 0}.modes button{flex:1;min-height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;color:#516174;cursor:pointer;font-size:.8rem;font-weight:700}.modes button.active{border-color:var(--gold);background:#fffaf0;color:var(--navy)}
+    .status{min-height:22px;margin:0 2px 8px;color:#64748b;font-size:.7rem}.place{display:none;margin-top:12px;padding:15px;border:1px solid #d4af3775;border-radius:18px;background:#0a192fe8;color:#fff;box-shadow:0 12px 28px #06101c33;backdrop-filter:blur(14px)}.place.show{display:block}.place h2{margin:0 0 7px;font-size:1rem}.meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.meta div{padding:8px;border:1px solid #fff2;border-radius:10px;background:#fff1}.meta small{display:block;color:#fffa;font-size:.62rem}.meta b{display:block;color:var(--gold);font-size:.78rem}.add{width:100%;min-height:44px;border:0;border-radius:12px;background:var(--gold);color:var(--navy);cursor:pointer;font-weight:800}
+    .leaflet-control-zoom a{color:var(--navy)!important;border-color:#d4af3780!important}.marker{width:22px;height:22px;border:3px solid #fff;border-radius:50% 50% 50% 0;background:var(--gold);box-shadow:0 3px 9px #0006;transform:rotate(-45deg)}.marker:after{content:'';display:block;width:6px;height:6px;margin:5px auto;border-radius:50%;background:var(--navy)}
+    .nav{position:fixed;bottom:0;left:50%;z-index:1000;display:flex;width:100%;max-width:480px;transform:translateX(-50%);padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#0a192ff7;border-top:1px solid #fff2;box-shadow:0 -4px 18px #0003;backdrop-filter:blur(14px)}.nav a{display:flex;min-height:52px;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:12px;color:#fffa;text-decoration:none;font-size:.6rem}.nav a.active{background:#d4af3729;color:var(--gold);font-weight:800}
+    @media(min-width:700px){body{padding:22px 0}.shell{min-height:calc(100vh - 44px);border-radius:28px;overflow:hidden}.nav{position:absolute;border-radius:0 0 28px 28px}}
+  </style>
+</head>
+<body>
+<main class="shell">
+  <header class="header"><a class="brand" href="./index.html"><img src="./icons/brand-logo.jpg" alt="شعار My Sindbad"><span><b>My Sindbad</b><small>رفيق السفر</small></span></a><a href="./index.html" class="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white no-underline">الرئيسية</a></header>
+  <section class="content">
+    <div class="intro"><p>MY SINDBAD · ملاحتك الذكية</p><h1>اكتشف المكان، وابدأ الرحلة</h1></div>
+    <div class="map-wrap"><div id="map" aria-label="خريطة تفاعلية"></div><form class="search" id="search"><input id="query" type="search" placeholder="ابحث عن مكان أو مدينة..." aria-label="البحث عن مكان"><button aria-label="بحث">⌕</button></form><button class="locate" id="locate" type="button" aria-label="موقعي الحالي">⌖</button></div>
+    <div class="modes"><button class="active" data-mode="driving" type="button">قيادة 🚗</button><button data-mode="walking" type="button">مشي 🚶</button></div>
+    <p class="status" id="status" role="status">ابحث عن مكان أو اضغط على الخريطة لاختيار وجهة.</p>
+    <article class="place" id="place"><h2 id="name">المكان المختار</h2><div class="meta"><div><small>المسافة</small><b id="distance">—</b></div><div><small>الوقت المتوقع</small><b id="duration">—</b></div></div><button class="add" id="add" type="button">أضف إلى رحلتي ➕</button></article>
+  </section>
+  <nav class="nav" aria-label="التنقل الرئيسي"><a href="./index.html">⌂<span>الرئيسية</span></a><a href="./index.html">◈<span>استكشف</span></a><a href="./itinerary.html">✈<span>رحلتي</span></a><a href="./map.html" class="active" aria-current="page">⌖<span>الخريطة</span></a><a href="./index.html">◌<span>المساعد</span></a></nav>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+<script>
+const map=L.map('map').setView([31.7917,-7.0926],6);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
+const $=id=>document.getElementById(id),icon=L.divIcon({className:'',html:'<div class="marker"></div>',iconSize:[22,22],iconAnchor:[11,22]});let user=null,selected=null,marker=null,route=null,line=null,mode='driving';
+function status(v){$('status').textContent=v}function distance(a,b){const r=Math.PI/180,e=6371000,dl=(b.lat-a.lat)*r,do_=((b.lng-a.lng)*r),x=Math.sin(dl/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(do_/2)**2;return e*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}function dist(v){return v>1000?(v/1000).toFixed(1)+' كم':Math.round(v)+' م'}function time(v){let m=Math.max(1,Math.round(v/60));return m>59?Math.floor(m/60)+' س و '+m%60+' د':m+' دقيقة'}function clear(){if(route){map.removeControl(route);route=null}if(line){map.removeLayer(line);line=null}}
+function fallback(a,b){clear();const d=distance(a,b)*1.25,s=mode==='walking'?1.35:11.1;line=L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{color:'#D4AF37',weight:5,dashArray:'8 8'}).addTo(map);map.fitBounds(line.getBounds(),{padding:[40,40]});$('distance').textContent=dist(d);$('duration').textContent=time(d/s);status('تم عرض تقدير تقريبي للمسار.')}
+function routeTo(){if(!selected)return;const start=user||map.getCenter(),end=L.latLng(selected.lat,selected.lon);clear();$('distance').textContent='جارٍ الحساب...';$('duration').textContent='جارٍ الحساب...';try{route=L.Routing.control({waypoints:[L.latLng(start.lat,start.lng),end],router:L.Routing.osrmv1({serviceUrl:'https://router.project-osrm.org/route/v1',profile:mode==='walking'?'foot':'car'}),lineOptions:{styles:[{color:'#D4AF37',weight:6}]},addWaypoints:false,draggableWaypoints:false,fitSelectedRoutes:true,show:false,createMarker:()=>null}).addTo(map);route.on('routesfound',e=>{const s=e.routes[0].summary;$('distance').textContent=dist(s.totalDistance);$('duration').textContent=time(s.totalTime);status('تم تحديد المسار إلى '+selected.name+'.')});route.on('routingerror',()=>fallback(start,end))}catch(e){fallback(start,end)}}
+function choose(p){selected=p;$('name').textContent=p.name;$('place').classList.add('show');if(marker)map.removeLayer(marker);marker=L.marker([p.lat,p.lon],{icon}).addTo(map).bindPopup(p.name).openPopup();map.setView([p.lat,p.lon],Math.max(map.getZoom(),13));routeTo()}
+async function search(q){if(q.length<2){status('اكتب اسم مكان أو مدينة للبحث.');return}status('جارٍ البحث في الخريطة...');try{const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&accept-language=ar,en&q='+encodeURIComponent(q));if(!r.ok)throw Error();const a=await r.json();if(!a.length){status('لم نجد هذا المكان.');return}choose({name:a[0].display_name.split(',')[0]||q,lat:+a[0].lat,lon:+a[0].lon});status('تم العثور على '+a[0].display_name+'.')}catch(e){status('تعذر البحث الآن. تحقق من الاتصال وحاول مرة أخرى.')}}
+$('search').addEventListener('submit',e=>{e.preventDefault();search($('query').value.trim())});document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));if(selected)routeTo()}));$('locate').addEventListener('click',()=>{status('جارٍ تحديد موقعك...');map.locate({setView:true,maxZoom:16,enableHighAccuracy:true})});
+map.on('locationfound',e=>{user=e.latlng;L.marker(e.latlng,{icon}).addTo(map).bindPopup('موقعك الحالي');status('تم تحديد موقعك الحالي.');if(selected)routeTo()});map.on('locationerror',()=>status('لم نتمكن من الوصول إلى موقعك. يمكنك البحث يدوياً.'));map.on('click',e=>choose({name:'المكان المحدد على الخريطة',lat:e.latlng.lat,lon:e.latlng.lng}));
+$('add').addEventListener('click',()=>{if(!selected)return;const a=JSON.parse(localStorage.getItem('myTripActivities')||'[]'),item={id:'map-'+selected.lat+'-'+selected.lon,title:selected.name,place:selected.name,type:'وجهة من الخريطة',lat:selected.lat,lon:selected.lon,distance:$('distance').textContent,duration:$('duration').textContent,addedAt:new Date().toISOString()};if(!a.some(x=>x.id===item.id))a.push(item);localStorage.setItem('myTripActivities',JSON.stringify(a));const t=JSON.parse(localStorage.getItem('sb_trip')||'null');if(t){t.days=Array.isArray(t.days)&&t.days.length?t.days:[[]];t.days[0].push({title:selected.name,time:'10:00',type:'وجهة من الخريطة',lat:selected.lat,lon:selected.lon});localStorage.setItem('sb_trip',JSON.stringify(t))}$('add').textContent='✓ تمت الإضافة إلى رحلتك';$('add').disabled=true;status('تم حفظ المكان في رحلتك بنجاح.')});map.locate({setView:false,maxZoom:16});
+</script>
+</body>
+</html>
