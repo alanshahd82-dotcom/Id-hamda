@@ -766,6 +766,15 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
     <span class="block text-white text-sm mt-1">رفيق السفر</span>
   </div>
 </div>
+<script>
+  window.setTimeout(() => {
+    const splash = document.getElementById('splashScreen');
+    if (!splash) return;
+    splash.style.opacity = '0';
+    splash.style.transition = 'opacity 0.5s ease';
+    window.setTimeout(() => splash.remove(), 500);
+  }, 1500);
+</script>
 <div class="shell" id="shell"></div>
 <script src="./utils/timeUtils.js"></script>
 <script>
