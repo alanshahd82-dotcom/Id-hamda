@@ -1,12 +1,17 @@
 (function initSharedHeader() {
   const logo = `
-    <svg class="site-header__logo" width="160" height="40" viewBox="0 0 160 40" role="img" aria-labelledby="siteLogoTitle">
-      <title id="siteLogoTitle">My Sindbad</title>
-      <path d="M8 28 Q12 22, 16 28 L22 34 L10 34 Z" fill="#D4AF37"/>
-      <path d="M16 8 L16 26 L28 20 Z" fill="#D4AF37"/>
-      <text x="35" y="22" fill="#D4AF37" font-family="Arial, sans-serif" font-size="18" font-weight="bold">My Sindbad</text>
-      <text x="35" y="34" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="9">رفيق السفر</text>
-    </svg>`;
+    <span class="site-header__mark" aria-hidden="true">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M4 20L8 16L12 20L16 16L20 20L24 16L28 20" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/>
+        <path d="M8 20V26H24V20" fill="#D4AF37"/>
+        <path d="M16 8V16" stroke="#D4AF37" stroke-width="2"/>
+        <path d="M16 8L22 12L16 16Z" fill="#D4AF37"/>
+      </svg>
+    </span>
+    <span class="site-header__wordmark">
+      <strong>My Sindbad</strong>
+      <small>رفيق السفر</small>
+    </span>`;
 
   function headerMarkup() {
     return `

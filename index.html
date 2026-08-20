@@ -752,12 +752,16 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
 </head>
 <body>
 <div id="splashScreen" class="fixed inset-0 bg-navy-900 z-[100] flex items-center justify-center" aria-label="جاري تحميل My Sindbad">
-  <svg width="200" height="60" viewBox="0 0 160 40" class="drop-shadow-lg animate-pulse" role="img" aria-label="My Sindbad">
-    <path d="M8 28 Q12 22, 16 28 L22 34 L10 34 Z" fill="#D4AF37"/>
-    <path d="M16 8 L16 26 L28 20 Z" fill="#D4AF37"/>
-    <text x="35" y="22" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#D4AF37">My Sindbad</text>
-    <text x="35" y="34" font-family="Arial, sans-serif" font-size="9" fill="#ffffff">رفيق السفر</text>
-  </svg>
+  <div class="text-center drop-shadow-lg animate-pulse" role="img" aria-label="My Sindbad">
+    <svg width="64" height="64" viewBox="0 0 32 32" fill="none" class="mx-auto mb-3">
+      <path d="M4 20L8 16L12 20L16 16L20 20L24 16L28 20" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/>
+      <path d="M8 20V26H24V20" fill="#D4AF37"/>
+      <path d="M16 8V16" stroke="#D4AF37" stroke-width="2"/>
+      <path d="M16 8L22 12L16 16Z" fill="#D4AF37"/>
+    </svg>
+    <strong class="block text-gold-500 text-2xl font-bold">My Sindbad</strong>
+    <span class="block text-white text-sm mt-1">رفيق السفر</span>
+  </div>
 </div>
 <div class="shell" id="shell"></div>
 <script src="./utils/timeUtils.js"></script>

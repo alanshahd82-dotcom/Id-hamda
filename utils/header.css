@@ -38,18 +38,40 @@
 
 .site-header__brand {
   display: inline-flex;
-  min-width: 160px;
+  min-width: 0;
   align-items: center;
+  gap: 9px;
   color: inherit;
   text-decoration: none;
 }
 
-.site-header__logo {
+.site-header__mark {
   display: block;
-  width: 160px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   overflow: visible;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18));
+}
+
+.site-header__mark svg {
+  display: block;
+}
+
+.site-header__wordmark {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.site-header__wordmark strong {
+  color: #d4af37;
+  font: 700 1.05rem 'Playfair Display', Georgia, serif;
+}
+
+.site-header__wordmark small {
+  margin-top: 3px;
+  color: #fff;
+  font-size: .62rem;
 }
 
 .site-header__home {
