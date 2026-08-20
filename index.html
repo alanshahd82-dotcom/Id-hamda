@@ -726,6 +726,7 @@ body{background:#060e1a}.shell{max-width:480px;background:#fbf9f5;padding-bottom
 </head>
 <body>
 <div class="shell" id="shell"></div>
+<script src="./utils/timeUtils.js"></script>
 <script>
 /* ===== الأيقونات والشعار ===== */
 const I={
@@ -753,6 +754,31 @@ nav:'<polygon points="3 11 22 2 13 21 11 13 3 11"/>'
 };
 const ic=(n,s=18)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
 const LOGO=`<img src="./icons/brand-logo.jpg" alt="شعار My Sindbad" class="brand-logo">`;
+
+function applyDynamicTheme() {
+  if (!window.MySindbadTimeUtils || !session) return;
+  const { getTimePeriod, getGreeting, getBackgroundConfig } = window.MySindbadTimeUtils;
+  const period = getTimePeriod();
+  const greeting = getGreeting();
+  const bgClasses = getBackgroundConfig();
+  const greetingElement = document.getElementById('greeting-text') || document.querySelector('h1');
+  if (greetingElement) greetingElement.textContent = greeting;
+
+  // Preserve the app's existing body classes while adding the dynamic theme classes.
+  document.body.classList.add(...bgClasses.split(/\s+/), 'transition-all', 'duration-700', 'ease-in-out', 'min-h-screen');
+  document.body.dataset.timePeriod = period;
+
+  // The project is plain HTML/JS, so provide a visual fallback when Tailwind is not loaded.
+  const fallbackBackgrounds = {
+    fajr: 'linear-gradient(to bottom, #0A192F, #334e68)',
+    morning: 'linear-gradient(to bottom, #38bdf8, #bae6fd)',
+    day: 'linear-gradient(to bottom, #93c5fd, #dbeafe)',
+    sunset: 'linear-gradient(to bottom, #fb923c, #f472b6, #a855f7)',
+    night: '#0A192F'
+  };
+  document.body.style.background = fallbackBackgrounds[period];
+}
+
 
 /* ===== البيانات ===== */
 const CITIES={
@@ -1068,6 +1094,7 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
     }
     $('shell').innerHTML = appHTML();
     bind();
+    applyDynamicTheme();
   }
  function bind() {
    const P = $('pg');
@@ -1083,7 +1110,7 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
    const t = lg('sb_trip', null);
    P.innerHTML = `
     <div class="home-hero">
-      <span class="greeting">MY SINDBAD · مرحباً بك</span>
+      <span class="greeting" id="greeting-text">MY SINDBAD · مرحباً بك</span>
       <h2>إلى أين تأخذك الرحلة؟</h2>
       <div class="home-search">
        <input class="inp" id="q" placeholder="اكتب اسم مدينة أو دولة..." autocomplete="off" onkeydown="if(event.key==='Enter')doSearch()">
@@ -1169,6 +1196,8 @@ function ask(q){const txt=q||$('bIn').value.trim();if(!txt)return;
  function doCv() { const box=$('cvR'); if(!box||!liveRates)return; const amount=Number($('cvA').value)||0, from=$('cvF').value, to=$('cvT').value; const rates={MAD:1,...liveRates.rates}; if(from==='MAD'&&rates[to])box.textContent=`${(amount*rates[to]).toFixed(2)} ${to}`; else if(rates[from]&&rates[to])box.textContent=`${(amount/rates[from]*rates[to]).toFixed(2)} ${to}`; }
  function pgBot(P) { P.innerHTML=`<div class="sec">مساعد السفر</div><div class="card"><div class="es-icon">${ic('chat',22)}</div><h3>مساعدك أثناء الرحلة</h3><p style="font-size:.8rem;line-height:1.7;color:var(--text-muted)">هذه الصفحة تجمع أدوات السفر الأساسية في مكان واحد. اختر إحدى الأدوات للوصول بسرعة إلى معلومات وجهتك وخطة رحلتك.</p><div class="tools"><button class="btn ghost" onclick="go('explore')">استكشاف الأماكن</button><button class="btn ghost" onclick="go('map')">الطقس والصرف</button><button class="btn ghost" onclick="go('trip')">إدارة الرحلة</button><button class="btn ghost" onclick="go('home')">البحث عن وجهة</button></div></div>`; }
  render();
+document.addEventListener('DOMContentLoaded', applyDynamicTheme);
+setInterval(applyDynamicTheme, 60000);
 </script>
 <script>
 if ('serviceWorker' in navigator) {
